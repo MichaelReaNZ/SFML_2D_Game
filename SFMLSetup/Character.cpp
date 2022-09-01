@@ -9,8 +9,8 @@ Character::Character(sf::Vector2f _Position)
 	m_texture->loadFromFile("Assets/Character.png");
 
 	//set to red
-	m_Shape.setFillColor(sf::Color::Red);
-	//m_Shape.setTexture(m_texture);
+	//m_Shape.setFillColor(sf::Color::Red);
+	m_Shape.setTexture(m_texture);
 }
 
 Character::~Character()
