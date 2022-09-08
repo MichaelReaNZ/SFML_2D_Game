@@ -23,8 +23,7 @@ void Character::Update(sf::RenderWindow& _Window)
 	_Window.draw(m_Shape);
 }
 
-void Character::Move()
-{
+void Character::CharacterInput() {
 	sf::Vector2f offsetVector;
 	sf::Vector2i boardOffset;
 
@@ -37,7 +36,7 @@ void Character::Move()
 	}
 
 	//if A move right
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
 		float increment = -moveAmount / divideMoveAmountBy;
 		offsetVector.x = increment;
@@ -45,7 +44,7 @@ void Character::Move()
 	}
 
 	//if W move up
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
 		float increment = -moveAmount / divideMoveAmountBy;
 		offsetVector.y = increment;
@@ -53,15 +52,24 @@ void Character::Move()
 	}
 
 	//if S move down
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
 		float increment = moveAmount / divideMoveAmountBy;
 		offsetVector.y = increment;
 		boardOffset.y = 1;
 	}
 
+	m_BoardOffset = boardOffset;
+	m_WorldOffset = offsetVector;
 
-	m_Shape.move(offsetVector);
-	m_BoardPosition = m_BoardPosition + boardOffset;
+	m_CharacterBoardPosition = m_CharacterBoardPosition + boardOffset;
+}
+
+void Character::Move(sf::Vector2f _OffsetVec, sf::Vector2i _boardOffset)
+{
+	if (m_CanMove) {
+		m_Shape.move(_OffsetVec);
+		m_CharacterBoardPosition = m_CharacterBoardPosition + _boardOffset;
+	}
 
 }

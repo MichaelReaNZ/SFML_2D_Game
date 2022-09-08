@@ -1,6 +1,12 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 
+enum TileType
+{
+	TileType_Wall,
+	TileType_Floor
+};
+
 class Tile
 {
 	//rect shape or a sprite
@@ -17,7 +23,9 @@ private:
 public:
 	sf::Vector2i m_TilePosition;
 
-	Tile(sf::Vector2f _Position);
+	TileType m_TileType;
+
+	Tile(sf::Vector2f _Position, TileType _Type);
 	~Tile();
 
 	void Update(sf::RenderWindow& _Window);

@@ -1,19 +1,30 @@
 #include "Tile.h"
 
-Tile::Tile(sf::Vector2f _Position) //TODO pass in the texture to not load it everytime
+Tile::Tile(sf::Vector2f _Position, TileType _Type) //TODO pass in the texture to not load it everytime
 {
 	m_TileShape.setSize(sf::Vector2f(64, 64));
 	m_TileShape.setPosition(_Position);
 
 	m_texture = new sf::Texture();
-	m_texture->loadFromFile("Assets/Tile.png");
+
+	switch (_Type)
+	{
+	case TileType_Floor:
+		m_texture->loadFromFile("Assets/Floor.png");
+		break;
+	case TileType_Wall:
+		m_texture->loadFromFile("Assets/Obstacle.png");
+		break;
+	}
+
+	//m_texture->loadFromFile("Assets/Tile.png");
 
 	m_TileShape.setTexture(m_texture);
 
-	//m_TileShape.setFillColor(sf::Color::Green);
+	m_TileType = _Type;
 
 	//set outline color to grey and make it thin
-	m_TileShape.setOutlineColor(sf::Color::Black);
+	m_TileShape.setOutlineColor(sf::Color::Blue);
 	m_TileShape.setOutlineThickness(5);
 }
 
