@@ -20,6 +20,6 @@ public:
 
 	void CharacterInput(Board* gameboard);
 
-	void Move(sf::Vector2f _OffsetVec, sf::Vector2i _boardOffset, Board* gameboard);
+	void Move(sf::Vector2i _boardOffset, Board* gameboard);
 };
 

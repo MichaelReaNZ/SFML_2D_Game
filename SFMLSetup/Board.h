@@ -4,17 +4,23 @@
 #include <iostream>
 
 class Board {
-	static const int boardWidth = 8;
-	static const int boardHeight = 8;
+	static const int BOARD_WIDTH = 16;
+	static const int BOARD_HEIGHT = 16;
 
-	Tile* m_tilePtrArray[boardWidth][boardHeight];
+	static const int TILE_SIZE_IN_PIXELS = 64;
+
+	Tile* m_tilePtrArray[BOARD_WIDTH][BOARD_HEIGHT];
+
+	//tile textures
+	sf::Texture* m_tileTextureArray[3];
+	void PreLoadTextureAssetsFromFiles();
 public:
-	Board(int _BoardWidth, int _BoardHeight);
+	Board();
 	~Board();
 	void Update(sf::RenderWindow& _Window);
 
-	char levelArray[boardWidth][boardHeight];
-	void LoadFile(std::string _FilePath);
+	char levelArray[BOARD_WIDTH][BOARD_HEIGHT];
+	void LoadMapFromFile(std::string _FilePath);
 
 	bool CanMoveToTile(sf::Vector2i _TilePosition);
 

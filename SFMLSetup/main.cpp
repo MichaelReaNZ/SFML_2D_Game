@@ -4,10 +4,10 @@
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Tile Based Project");
-	window.setFramerateLimit(60);
+	sf::RenderWindow window(sf::VideoMode(1024, 1024), "Tile Based Project");
+	window.setFramerateLimit(120);
 
-	Board* mainBoard = new Board(8, 8);
+	Board* mainBoard = new Board();
 	Character* mainCharacter = new Character(mainBoard, sf::Vector2i(3, 4));
 
 	while (window.isOpen())
@@ -27,6 +27,7 @@ int main()
 		}
 		window.clear();
 
+		//TODO:Investigate performance issue with the map
 		mainBoard->Update(window);
 		mainCharacter->Update(window);
 

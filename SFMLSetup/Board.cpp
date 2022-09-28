@@ -1,21 +1,40 @@
 
 #include "Board.h"
 
-Board::Board(int _BoardWidth, int _BoardHeight)
+Board::Board()
 {
-	LoadFile("Assets/Map.txt");
+	PreLoadTextureAssetsFromFiles();
+	LoadMapFromFile("Assets/Map.txt");
 }
 
 Board::~Board()
 {
+	////for each asset in m_tileTextureArray delete
+	//for (int i = 0; i < m_tileTextureArray->getsize(); i++)
+	//{
+	//	delete m_tileTextureArray[i];
+	//	m_tileTextureArray[i] = nullptr;
+	//}
 
+}
+
+void Board::PreLoadTextureAssetsFromFiles() {
+
+	m_tileTextureArray[TileType_Wall] = new sf::Texture();
+	m_tileTextureArray[TileType_Wall]->loadFromFile("Assets/Obstacle.png");
+
+	m_tileTextureArray[TileType_Floor] = new sf::Texture();
+	m_tileTextureArray[TileType_Floor]->loadFromFile("Assets/Floor.png");
+
+	m_tileTextureArray[TileType_Sea] = new sf::Texture();
+	m_tileTextureArray[TileType_Sea]->loadFromFile("Assets/Sea.png");
 }
 
 void Board::Update(sf::RenderWindow& _Window)
 {
-	for (int x = 0; x < boardWidth; x++)
+	for (int x = 0; x < BOARD_WIDTH; x++)
 	{
-		for (int y = 0; y < boardHeight; y++)
+		for (int y = 0; y < BOARD_HEIGHT; y++)
 		{
 			m_tilePtrArray[x][y]->Update(_Window);
 		}
@@ -33,19 +52,14 @@ sf::Vector2f Board::BoardPositionToScreenPosition(sf::Vector2i _BoardPosition)
 
 bool Board::CanMoveToTile(sf::Vector2i _TilePosition)
 {
-	//get m_tilePtrArray height
-	int height = sizeof(m_tilePtrArray) / sizeof(m_tilePtrArray[0]);
-	//get m_tilePtrArray width
-	int width = sizeof(m_tilePtrArray[0]) / sizeof(m_tilePtrArray[0][0]);
-
 	//check if y index is witin bounds of the array
-	if (_TilePosition.y < 0 || _TilePosition.y >= height)
+	if (_TilePosition.y < 0 || _TilePosition.y >= BOARD_HEIGHT)
 	{
 		return false;
 	}
 
 	//check if x index is witin bounds of the array
-	if (_TilePosition.x < 0 || _TilePosition.x >= width)
+	if (_TilePosition.x < 0 || _TilePosition.x >= BOARD_WIDTH)
 	{
 		return false;
 	}
@@ -65,7 +79,7 @@ bool Board::CanMoveToTile(sf::Vector2i _TilePosition)
 	}
 }
 
-void Board::LoadFile(std::string _FilePath) {
+void Board::LoadMapFromFile(std::string _FilePath) {
 	std::fstream loadFileStream;
 	loadFileStream.open(_FilePath, std::ios::in);
 
@@ -82,16 +96,20 @@ void Board::LoadFile(std::string _FilePath) {
 		loadFileStream.close();
 	}
 
-	for (int x = 0; x < boardHeight; x++)
+	for (int x = 0; x < BOARD_HEIGHT; x++)
 	{
-		for (int y = 0; y < boardWidth; y++)
+		for (int y = 0; y < BOARD_WIDTH; y++)
 		{
 			if (levelArray[y][x] == 'x') {
-				m_tilePtrArray[y][x] = new Tile(sf::Vector2f(x * 64, y * 64), TileType_Wall);
+				m_tilePtrArray[y][x] = new Tile(sf::Vector2f(x * 64, y * 64), TileType_Wall, m_tileTextureArray[TileType_Wall]);
 				m_tilePtrArray[y][x]->m_TilePosition = sf::Vector2i(x, y);
 			}
 			else if (levelArray[y][x] == 'o') {
-				m_tilePtrArray[y][x] = new Tile(sf::Vector2f(x * 64, y * 64), TileType_Floor);
+				m_tilePtrArray[y][x] = new Tile(sf::Vector2f(x * 64, y * 64), TileType_Floor, m_tileTextureArray[TileType_Floor]);
+				m_tilePtrArray[y][x]->m_TilePosition = sf::Vector2i(x, y);
+			}
+			else if (levelArray[y][x] == 's') {
+				m_tilePtrArray[y][x] = new Tile(sf::Vector2f(x * 64, y * 64), TileType_Sea, m_tileTextureArray[TileType_Sea]);
 				m_tilePtrArray[y][x]->m_TilePosition = sf::Vector2i(x, y);
 			}
 

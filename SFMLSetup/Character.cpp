@@ -1,6 +1,5 @@
 #include "Character.h"
 
-
 Character::Character(Board* _Gameboard, sf::Vector2i _BoardPosition)
 {
 	m_Shape.setSize(sf::Vector2f(64, 64));
@@ -30,51 +29,38 @@ void Character::Update(sf::RenderWindow& _Window)
 }
 
 void Character::CharacterInput(Board* _Gameboard) {
-	sf::Vector2f screenOffset;
 	sf::Vector2i boardOffset;
 
 	//if D move left
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
-		float increment = moveAmount / divideMoveAmountBy;
-		screenOffset.x = increment;
 		boardOffset.x = 1;
 	}
 
 	//if A move right
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
-		float increment = -moveAmount / divideMoveAmountBy;
-		screenOffset.x = increment;
 		boardOffset.x = -1;
 	}
 
 	//if W move up
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
-		float increment = -moveAmount / divideMoveAmountBy;
-		screenOffset.y = increment;
 		boardOffset.y = -1;
 	}
 
 	//if S move down
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
-		float increment = moveAmount / divideMoveAmountBy;
-		screenOffset.y = increment;
 		boardOffset.y = 1;
 	}
-
-	/*m_BoardOffset = boardOffset;
-	m_ScreenOffset = screenOffset;*/
-
-	/*m_CharacterBoardPosition = m_CharacterBoardPosition + boardOffset;*/
-
-
-	Move(screenOffset, boardOffset, _Gameboard);
+	if (boardOffset.x != 0 || boardOffset.y != 0)
+	{
+		Move(boardOffset, _Gameboard);
+	}
 }
 
-void Character::Move(sf::Vector2f _ScreenOffsetVec, sf::Vector2i _BoardOffset, Board* _Gameboard)
+void Character::Move(sf::Vector2i _BoardOffset, Board* _Gameboard)
 {
 	sf::Vector2i boardPositionToMoveTo = m_CharacterBoardPosition + _BoardOffset;
 
@@ -82,7 +68,13 @@ void Character::Move(sf::Vector2f _ScreenOffsetVec, sf::Vector2i _BoardOffset, B
 
 	if (_Gameboard->CanMoveToTile(boardPositionToMoveTo)) {
 		m_CharacterBoardPosition = boardPositionToMoveTo;
-		m_Shape.move(_ScreenOffsetVec);
+
+		//calculate screen offset
+		sf::Vector2f offSet;
+		offSet.x = _BoardOffset.x * moveAmount;
+		offSet.y = _BoardOffset.y * moveAmount;
+
+		m_Shape.move(offSet);
 
 		std::cout << "Character move success" << std::endl;
 	}
