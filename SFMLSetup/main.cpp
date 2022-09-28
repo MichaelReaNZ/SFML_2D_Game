@@ -8,8 +8,7 @@ int main()
 	window.setFramerateLimit(60);
 
 	Board* mainBoard = new Board(8, 8);
-	Character* mainCharacter = new Character(sf::Vector2f(128, 128));
-	mainCharacter->m_CharacterBoardPosition = sf::Vector2i(50, 50);
+	Character* mainCharacter = new Character(mainBoard, sf::Vector2i(3, 4));
 
 	while (window.isOpen())
 	{
@@ -21,18 +20,14 @@ int main()
 				if (event.type == sf::Event::Closed)
 					window.close();
 
-
 				if (event.type == sf::Event::KeyPressed) {
-					mainCharacter->CharacterInput();
-					mainCharacter->m_CanMove = mainBoard->CheckTile(mainCharacter->m_CharacterBoardPosition);
-					mainCharacter->Move(mainCharacter->m_WorldOffset, mainCharacter->m_BoardOffset);
+					mainCharacter->CharacterInput(mainBoard);
 				}
 			}
 		}
 		window.clear();
-		mainBoard->Update(window);
 
-		//mainCharacter->Move();
+		mainBoard->Update(window);
 		mainCharacter->Update(window);
 
 		window.display();

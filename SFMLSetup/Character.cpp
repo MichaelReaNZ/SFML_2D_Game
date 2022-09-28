@@ -1,9 +1,15 @@
 #include "Character.h"
 
-Character::Character(sf::Vector2f _Position)
+
+Character::Character(Board* _Gameboard, sf::Vector2i _BoardPosition)
 {
 	m_Shape.setSize(sf::Vector2f(64, 64));
-	m_Shape.setPosition(_Position);
+
+	m_CharacterBoardPosition = _BoardPosition;
+
+	//Convert _BoardPosition to screen position
+	sf::Vector2f screenPos = _Gameboard->BoardPositionToScreenPosition(m_CharacterBoardPosition);
+	m_Shape.setPosition(screenPos);
 
 	m_texture = new sf::Texture();
 	m_texture->loadFromFile("Assets/Character.png");
@@ -23,15 +29,15 @@ void Character::Update(sf::RenderWindow& _Window)
 	_Window.draw(m_Shape);
 }
 
-void Character::CharacterInput() {
-	sf::Vector2f offsetVector;
+void Character::CharacterInput(Board* _Gameboard) {
+	sf::Vector2f screenOffset;
 	sf::Vector2i boardOffset;
 
 	//if D move left
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
 		float increment = moveAmount / divideMoveAmountBy;
-		offsetVector.x = increment;
+		screenOffset.x = increment;
 		boardOffset.x = 1;
 	}
 
@@ -39,7 +45,7 @@ void Character::CharacterInput() {
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
 		float increment = -moveAmount / divideMoveAmountBy;
-		offsetVector.x = increment;
+		screenOffset.x = increment;
 		boardOffset.x = -1;
 	}
 
@@ -47,7 +53,7 @@ void Character::CharacterInput() {
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
 		float increment = -moveAmount / divideMoveAmountBy;
-		offsetVector.y = increment;
+		screenOffset.y = increment;
 		boardOffset.y = -1;
 	}
 
@@ -55,21 +61,35 @@ void Character::CharacterInput() {
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
 		float increment = moveAmount / divideMoveAmountBy;
-		offsetVector.y = increment;
+		screenOffset.y = increment;
 		boardOffset.y = 1;
 	}
 
-	m_BoardOffset = boardOffset;
-	m_WorldOffset = offsetVector;
+	/*m_BoardOffset = boardOffset;
+	m_ScreenOffset = screenOffset;*/
 
-	m_CharacterBoardPosition = m_CharacterBoardPosition + boardOffset;
+	/*m_CharacterBoardPosition = m_CharacterBoardPosition + boardOffset;*/
+
+
+	Move(screenOffset, boardOffset, _Gameboard);
 }
 
-void Character::Move(sf::Vector2f _OffsetVec, sf::Vector2i _boardOffset)
+void Character::Move(sf::Vector2f _ScreenOffsetVec, sf::Vector2i _BoardOffset, Board* _Gameboard)
 {
-	if (m_CanMove) {
-		m_Shape.move(_OffsetVec);
-		m_CharacterBoardPosition = m_CharacterBoardPosition + _boardOffset;
+	sf::Vector2i boardPositionToMoveTo = m_CharacterBoardPosition + _BoardOffset;
+
+	std::cout << "Character attempting to move to Board Position: " << "x:" << boardPositionToMoveTo.x << ", " << "y:" << boardPositionToMoveTo.y << std::endl;
+
+	if (_Gameboard->CanMoveToTile(boardPositionToMoveTo)) {
+		m_CharacterBoardPosition = boardPositionToMoveTo;
+		m_Shape.move(_ScreenOffsetVec);
+
+		std::cout << "Character move success" << std::endl;
+	}
+	else {
+		//TODO:Sound effect of can't move played
+		std::cout << "Character move failed" << std::endl;
 	}
 
+	std::cout << "Character Board Position: x:" << m_CharacterBoardPosition.x << ", " << "y:" << m_CharacterBoardPosition.y << std::endl;
 }

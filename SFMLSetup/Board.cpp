@@ -22,6 +22,49 @@ void Board::Update(sf::RenderWindow& _Window)
 	}
 }
 
+//convert board position to screen position
+sf::Vector2f Board::BoardPositionToScreenPosition(sf::Vector2i _BoardPosition)
+{
+	sf::Vector2f screenPosition;
+	screenPosition.x = _BoardPosition.x * 64;
+	screenPosition.y = _BoardPosition.y * 64;
+	return screenPosition;
+}
+
+bool Board::CanMoveToTile(sf::Vector2i _TilePosition)
+{
+	//get m_tilePtrArray height
+	int height = sizeof(m_tilePtrArray) / sizeof(m_tilePtrArray[0]);
+	//get m_tilePtrArray width
+	int width = sizeof(m_tilePtrArray[0]) / sizeof(m_tilePtrArray[0][0]);
+
+	//check if y index is witin bounds of the array
+	if (_TilePosition.y < 0 || _TilePosition.y >= height)
+	{
+		return false;
+	}
+
+	//check if x index is witin bounds of the array
+	if (_TilePosition.x < 0 || _TilePosition.x >= width)
+	{
+		return false;
+	}
+
+	//check if tile at that position exists
+	if (m_tilePtrArray[_TilePosition.y][_TilePosition.x]->m_TileType != NULL) {
+		//check if tile is a wall
+		if (m_tilePtrArray[_TilePosition.y][_TilePosition.x]->m_TileType == TileType_Wall) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+	else {
+		return false;
+	}
+}
+
 void Board::LoadFile(std::string _FilePath) {
 	std::fstream loadFileStream;
 	loadFileStream.open(_FilePath, std::ios::in);

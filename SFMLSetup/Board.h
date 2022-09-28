@@ -16,5 +16,7 @@ public:
 	char levelArray[boardWidth][boardHeight];
 	void LoadFile(std::string _FilePath);
 
-	TileType CheckTile(sf::Vector2i _Position) { return m_tilePtrArray[_Position.y][_Position.x]->m_TileType; }
+	bool CanMoveToTile(sf::Vector2i _TilePosition);
+
+	sf::Vector2f BoardPositionToScreenPosition(sf::Vector2i _BoardPosition);
 };
