@@ -1,11 +1,19 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 #include "Board.h"
+#include "Enums.h"
+#include "Bullet.h"
+
 class Character
 {
 private:
 	static const int moveAmount = 64;
 	static const int divideMoveAmountBy = 1;
+
+	//enum for direction the character is facing
+	//enum Direction { Up, Down, Left, Right };
+
+	Direction m_direction;
 
 	sf::RectangleShape m_Shape; // the 2d image of the 
 	sf::Texture* m_texture; // the texture of the 
@@ -19,7 +27,8 @@ public:
 	void Update(sf::RenderWindow& _Window);
 
 	void CharacterInput(Board* gameboard);
-
 	void Move(sf::Vector2i _boardOffset, Board* gameboard);
+
+	Bullet Shoot();
 };
 

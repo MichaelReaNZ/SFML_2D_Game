@@ -1,4 +1,5 @@
 #include "Character.h"
+#include "Bullet.h"
 
 Character::Character(Board* _Gameboard, sf::Vector2i _BoardPosition)
 {
@@ -9,9 +10,11 @@ Character::Character(Board* _Gameboard, sf::Vector2i _BoardPosition)
 	//Convert _BoardPosition to screen position
 	sf::Vector2f screenPos = _Gameboard->BoardPositionToScreenPosition(m_CharacterBoardPosition);
 	m_Shape.setPosition(screenPos);
+	//set to center
+	//m_Shape.setOrigin(m_Shape.getSize().x / 2, m_Shape.getSize().y / 2);
 
 	m_texture = new sf::Texture();
-	m_texture->loadFromFile("Assets/Character.png");
+	m_texture->loadFromFile("Assets/HeroCharacter.png");
 
 	//set to red
 	//m_Shape.setFillColor(sf::Color::Red);
@@ -32,28 +35,41 @@ void Character::Update(sf::RenderWindow& _Window)
 void Character::CharacterInput(Board* _Gameboard) {
 	sf::Vector2i boardOffset;
 
-	//if D move left
+	//if D move right
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
 		boardOffset.x = 1;
+		//m_Shape.setScale(1, 1);
+		//m_Shape.setRotation(0);
+
+		m_direction = Right;
 	}
 
-	//if A move right
+	//if A move left
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
 		boardOffset.x = -1;
+		//m_Shape.setRotation(180);
+		//m_Shape.setScale(-1, 1);
+		m_direction = Left;
 	}
 
 	//if W move up
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
 		boardOffset.y = -1;
+		//m_Shape.setScale(1, 1);
+		//m_Shape.setRotation(270);
+		m_direction = Up;
 	}
 
 	//if S move down
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
 		boardOffset.y = 1;
+		//m_Shape.setScale(1, 1);
+		//	m_Shape.setRotation(90);
+		m_direction = Down;
 	}
 
 	if (boardOffset.x != 0 || boardOffset.y != 0)
@@ -87,3 +103,10 @@ void Character::Move(sf::Vector2i _BoardOffset, Board* _Gameboard)
 
 	std::cout << "Character Board Position: x:" << m_CharacterBoardPosition.x << ", " << "y:" << m_CharacterBoardPosition.y << std::endl;
 }
+
+Bullet Character::Shoot()
+{
+	return Bullet(m_Shape.getPosition(), m_direction);
+}
+
+
