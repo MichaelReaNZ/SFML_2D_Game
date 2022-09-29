@@ -103,6 +103,16 @@ void Board::LoadMapFromFile(std::string _FilePath) {
 			if (levelArray[y][x] == 'x') {
 				m_tilePtrArray[y][x] = new Tile(sf::Vector2f(x * 64, y * 64), TileType_Wall, m_tileTextureArray[TileType_Wall]);
 				m_tilePtrArray[y][x]->m_TilePosition = sf::Vector2i(x, y);
+
+				//collisions
+				m_tilePtrArray[y][x]->m_AABB = new sf::FloatRect();
+				m_tilePtrArray[y][x]->m_AABB->top = m_tilePtrArray[y][x]->getShape().getGlobalBounds().top;
+				m_tilePtrArray[y][x]->m_AABB->top = m_tilePtrArray[y][x]->getShape().getGlobalBounds().left;
+				m_tilePtrArray[y][x]->m_AABB->top = m_tilePtrArray[y][x]->getShape().getGlobalBounds().height;
+				m_tilePtrArray[y][x]->m_AABB->top = m_tilePtrArray[y][x]->getShape().getGlobalBounds().width;
+
+				levelWallTiles.push_back(m_tilePtrArray[y][x]);
+				m_WorldCollisionRects.push_back(m_tilePtrArray[y][x]->m_AABB);
 			}
 			else if (levelArray[y][x] == 'o') {
 				m_tilePtrArray[y][x] = new Tile(sf::Vector2f(x * 64, y * 64), TileType_Floor, m_tileTextureArray[TileType_Floor]);

@@ -24,10 +24,14 @@ private:
 
 public:
 	sf::Vector2i m_TilePosition;
+	sf::FloatRect* m_AABB; //the bounding volume for the time
+
 	TileType m_TileType;
 
 	Tile(sf::Vector2f _Position, TileType _Type, sf::Texture* _Texture);
 	~Tile();
+
+	sf::RectangleShape getShape() { return m_TileShape; }
 
 	void Update(sf::RenderWindow& _Window);
 

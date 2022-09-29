@@ -11,6 +11,9 @@ class Board {
 
 	Tile* m_tilePtrArray[BOARD_WIDTH][BOARD_HEIGHT];
 
+	std::vector<Tile*> levelWallTiles;
+
+
 	//tile textures
 	sf::Texture* m_tileTextureArray[3];
 	void PreLoadTextureAssetsFromFiles();
@@ -19,6 +22,7 @@ public:
 	~Board();
 	void Update(sf::RenderWindow& _Window);
 
+	std::vector<sf::FloatRect*> m_WorldCollisionRects;
 	char levelArray[BOARD_WIDTH][BOARD_HEIGHT];
 	void LoadMapFromFile(std::string _FilePath);
 
