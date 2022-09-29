@@ -5,7 +5,7 @@
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(1024, 1024), "Tile Based Project");
-	window.setFramerateLimit(120);
+	window.setFramerateLimit(15);
 
 	Board* mainBoard = new Board();
 	Character* mainCharacter = new Character(mainBoard, sf::Vector2i(3, 4));

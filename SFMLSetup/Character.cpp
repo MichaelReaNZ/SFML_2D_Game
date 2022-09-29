@@ -16,6 +16,7 @@ Character::Character(Board* _Gameboard, sf::Vector2i _BoardPosition)
 	//set to red
 	//m_Shape.setFillColor(sf::Color::Red);
 	m_Shape.setTexture(m_texture);
+
 }
 
 Character::~Character()
@@ -54,6 +55,7 @@ void Character::CharacterInput(Board* _Gameboard) {
 	{
 		boardOffset.y = 1;
 	}
+
 	if (boardOffset.x != 0 || boardOffset.y != 0)
 	{
 		Move(boardOffset, _Gameboard);

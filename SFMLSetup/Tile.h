@@ -20,11 +20,12 @@ private:
 	sf::RectangleShape m_TileShape; // the 2d image of the tile
 	sf::Texture* m_Texture; // the texture of the tile
 
+	sf::Sprite m_TileSprite;
+
 public:
 	sf::Vector2i m_TilePosition;
 	TileType m_TileType;
 
-	//Tile(sf::Vector2f _Position, TileType _Type);
 	Tile(sf::Vector2f _Position, TileType _Type, sf::Texture* _Texture);
 	~Tile();
 
