@@ -6,7 +6,7 @@
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(1024, 1024), "Tile Based Project");
-	//window.setFramerateLimit(0);
+	window.setFramerateLimit(60);
 
 	Board* mainBoard = new Board();
 	Character* mainCharacter = new Character(mainBoard, sf::Vector2i(3, 4));
@@ -23,18 +23,20 @@ int main()
 				if (event.type == sf::Event::Closed)
 					window.close();
 
-				//input
-				mainCharacter->CharacterInput(mainBoard);
-				if (event.type == sf::Event::KeyPressed) {
-					if (event.key.code == sf::Keyboard::Space) {
-						mainCharacter->CharacterJump();
-					}
-				}
+				//if (event.type == sf::Event::KeyPressed) {
+				//	if (event.key.code == sf::Keyboard::Space) {
+				//		//	mainCharacter->CharacterJump();
+				//	}
+				//}
 			}
 		}
 
-		physicsSystem.PhysicsUpdate();
-		physicsSystem.UpdateDynamicObject(mainCharacter, false);
+
+
+		//physicsSystem.PhysicsUpdate();
+		//physicsSystem.UpdateDynamicObject(mainCharacter, false);
+
+		mainCharacter->CharacterInput(mainBoard);
 
 		window.clear();
 

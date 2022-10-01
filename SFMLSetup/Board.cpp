@@ -106,10 +106,18 @@ void Board::LoadMapFromFile(std::string _FilePath) {
 
 				//collisions
 				m_tilePtrArray[y][x]->m_AABB = new sf::FloatRect();
-				m_tilePtrArray[y][x]->m_AABB->top = m_tilePtrArray[y][x]->getShape().getGlobalBounds().top;
-				m_tilePtrArray[y][x]->m_AABB->top = m_tilePtrArray[y][x]->getShape().getGlobalBounds().left;
-				m_tilePtrArray[y][x]->m_AABB->top = m_tilePtrArray[y][x]->getShape().getGlobalBounds().height;
-				m_tilePtrArray[y][x]->m_AABB->top = m_tilePtrArray[y][x]->getShape().getGlobalBounds().width;
+				//m_tilePtrArray[y][x]->m_AABB->top = m_tilePtrArray[y][x]->getShape().getGlobalBounds().top;
+				//m_tilePtrArray[y][x]->m_AABB->left = m_tilePtrArray[y][x]->getShape().getGlobalBounds().left;
+				//m_tilePtrArray[y][x]->m_AABB->height = m_tilePtrArray[y][x]->getShape().getGlobalBounds().height;
+				//m_tilePtrArray[y][x]->m_AABB->width = m_tilePtrArray[y][x]->getShape().getGlobalBounds().width;
+
+				m_tilePtrArray[y][x]->m_AABB->top = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().top;
+				m_tilePtrArray[y][x]->m_AABB->left = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().left;
+				m_tilePtrArray[y][x]->m_AABB->height = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().height;
+				m_tilePtrArray[y][x]->m_AABB->width = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().width;
+
+				//draw red outline on m_AABB
+				//m_AABB
 
 				levelWallTiles.push_back(m_tilePtrArray[y][x]);
 				m_WorldCollisionRects.push_back(m_tilePtrArray[y][x]->m_AABB);

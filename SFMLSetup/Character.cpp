@@ -37,110 +37,73 @@ void Character::Update(sf::RenderWindow& _Window)
 void Character::CharacterInput(Board* _Gameboard) {
 	sf::Vector2i boardOffset;
 
-
-
-	//if D move right
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+	//right
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
 		boardOffset.x += 1;
-		//m_Shape.setScale(1, 1);
-		//m_Shape.setRotation(0);
-
-		m_direction = Right;
 	}
 
-	//if A move left
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	//left
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
 		boardOffset.x += -1;
-		//m_Shape.setRotation(180);
-		//m_Shape.setScale(-1, 1);
-		m_direction = Left;
 	}
 
-	//if W move up
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+	//up
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
 		boardOffset.y += -1;
-		//m_Shape.setScale(1, 1);
-		//m_Shape.setRotation(270);
-		m_direction = Up;
 	}
 
-	//if S move down
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+	//down
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 	{
 		boardOffset.y += 1;
-		//m_Shape.setScale(1, 1);
-		//	m_Shape.setRotation(90);
-		m_direction = Down;
 	}
-
 
 	m_CharMoveVec = boardOffset;
 
-
 	if (boardOffset.x != 0 || boardOffset.y != 0)
 	{
-		//Move(boardOffset, _Gameboard);
-		NewMove(0.5f, _Gameboard->m_WorldCollisionRects);
+		//MoveToTile(boardOffset, _Gameboard);
+		Move(1.0f, _Gameboard->m_WorldCollisionRects);
 	}
 }
 
-void Character::NewMove(float _dt, std::vector<sf::FloatRect*> Collisions)
+void Character::Move(float _dt, std::vector<sf::FloatRect*> Collisions)
 {
-	sf::Vector2f movement(0, 0);
-
-
 	m_CharMoveVec.x *= m_CharSpeed * _dt;
 	m_CharMoveVec.y *= m_CharSpeed * _dt;
 
-
-
-	//m_Shape.move(0, m_CharMoveVec.y * m_CharSpeed * _dt);
-	//m_Shape.move(m_CharMoveVec.x * m_CharBaseSpeed * _dt, m_CharMoveVec.x * m_CharBaseSpeed * _dt);
-	m_Shape.move(m_CharMoveVec.x, m_CharMoveVec.y);
-	std::cout << "Movement Direction: " << EnumToString(m_direction) << std::endl;
+	//move x and y seperate to avoid glitchyness of being moved up when you have colided horizontally
+	m_Shape.move(m_CharMoveVec.x, 0.00f);
 	std::cout << "Movement x" << m_CharMoveVec.x << std::endl;
-	std::cout << "Movement y" << m_CharMoveVec.y << std::endl;
 
-	//m_CharMoveVec.y = 0;
 	for (int i = 0; i < Collisions.size(); i++) {
 		{
+			sf::FloatRect shapeBounds = m_Shape.getGlobalBounds();
 			if (m_Shape.getGlobalBounds().intersects(*Collisions[i]))
 			{
-				colliding = true;
-				playerVelocityY = 0;
-				Collisions::ResolveYCollisions(&m_Shape, Collisions[i]);
 				Collisions::ResolveXCollisions(&m_Shape, Collisions[i]);
-
-				std::cout << colliding << std::endl;
-
-				//call collision resolution function
 			}
 		}
 	}
-	/*m_Shape.move(m_CharMoveVec.x * m_CharBaseSpeed * _dt, 0);
-	m_CharMoveVec.y = 0;*/
 
-	//for (int i = 0; i < Collisions.size(); i++) {
-	//	{
-	//		if (m_Shape.getGlobalBounds().intersects(*Collisions[i]))
-	//		{
-	//			colliding = true;
-	//			Collisions::ResolveXCollisions(&m_Shape, Collisions[i]);
-	//			playerVelocityY = 0;
+	m_Shape.move(0.00f, m_CharMoveVec.y);
+	std::cout << "Movement y" << m_CharMoveVec.y << std::endl;
 
-	//			//call collision resolution function
-	//		}
-	//		else
-	//			colliding = false;
-	//	}
-
-	//}
+	for (int i = 0; i < Collisions.size(); i++) {
+		{
+			sf::FloatRect shapeBounds = m_Shape.getGlobalBounds();
+			if (m_Shape.getGlobalBounds().intersects(*Collisions[i]))
+			{
+				Collisions::ResolveYCollisions(&m_Shape, Collisions[i]);
+			}
+		}
+	}
 }
 
-void Character::Move(sf::Vector2i _BoardOffset, Board* _Gameboard)
+void Character::MoveToTile(sf::Vector2i _BoardOffset, Board* _Gameboard)
 {
 	sf::Vector2i boardPositionToMoveTo = m_CharacterBoardPosition + _BoardOffset;
 
