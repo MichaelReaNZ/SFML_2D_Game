@@ -31,7 +31,7 @@ public:
 	sf::RectangleShape m_Shape;
 	sf::Vector2i m_CharacterBoardPosition;
 
-	int m_health = 4;
+	int m_health = 2;
 
 	//bool colliding = false;
 	//float playerVelocityY = 0.0f;

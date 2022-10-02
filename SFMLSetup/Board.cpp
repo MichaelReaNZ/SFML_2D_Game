@@ -13,13 +13,9 @@ Board::Board()
 
 Board::~Board()
 {
-	////for each asset in m_tileTextureArray delete
-	//for (int i = 0; i < m_tileTextureArray->getsize(); i++)
-	//{
-	//	delete m_tileTextureArray[i];
-	//	m_tileTextureArray[i] = nullptr;
-	//}
-
+	for (int i = 0; i < m_Enemies.size(); i++) {
+		delete m_Enemies[i];
+	}
 }
 
 void Board::PreLoadTextureAssetsFromFiles() {

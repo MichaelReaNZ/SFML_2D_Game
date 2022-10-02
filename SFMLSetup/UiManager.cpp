@@ -30,5 +30,23 @@ void UiManager::Update(sf::RenderWindow& _Window, int _CharacterHealth)
 		_Window.draw(HealthBar);
 	}
 
+	//death screen
+	if (_CharacterHealth <= 0) {
+		m_IsGameOver = true;
+		//draw white screen
+		sf::RectangleShape deathScreen;
+		deathScreen.setSize(sf::Vector2f(_Window.getSize().x, _Window.getSize().y));
+		deathScreen.setPosition(hudAreaBox.getPosition());
+		//	deathScreen.setFillColor(sf::Color::White);
+
+		sf::Texture texture = sf::Texture();
+		texture.loadFromFile("Assets/GameOverScreen.png");
+		deathScreen.setTexture(&texture);
+
+		//press enter to try again
+
+
+		_Window.draw(deathScreen);
+	}
 
 }
