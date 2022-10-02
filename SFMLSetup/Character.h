@@ -19,22 +19,24 @@ private:
 	float m_CharBaseSpeed = 5.0f;
 	float m_CharSpeed = m_CharBaseSpeed;
 
-	////remove this?
-	//Direction m_direction;
+	sf::Texture* m_texture;
 
+	int m_health = 4;
 
-	sf::Texture* m_texture; // the texture of the 
+	sf::Clock m_invincibleTimeClock;
+	bool m_IsInvincible = false;
+
 
 public:
-	sf::RectangleShape m_Shape; // the 2d image of the 
+	sf::RectangleShape m_Shape;
 	sf::Vector2i m_CharacterBoardPosition;
 
-	bool colliding = false;
+	//bool colliding = false;
 	//float playerVelocityY = 0.0f;
 
 	//sf::RectangleShape* CharGetShape() { return m_Shape; }
 
-	Character(Board* _Gameboard, sf::Vector2i _BoardPosition);
+	Character(sf::Vector2f _ScreenPosition);
 	~Character();
 
 	//void Update(sf::RenderWindow& _Window);

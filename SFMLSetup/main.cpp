@@ -2,6 +2,8 @@
 #include "Board.h"
 #include "Character.h"
 #include "Physics.h"
+#include "Enemy.h"
+
 
 int main()
 {
@@ -9,9 +11,9 @@ int main()
 	window.setFramerateLimit(60);
 
 	Board* mainBoard = new Board();
-	Character* mainCharacter = new Character(mainBoard, sf::Vector2i(3, 4));
+	Character* mainCharacter = new Character(mainBoard->BoardPositionToScreenPosition(2, 2));
 
-	Physics physicsSystem;
+
 
 	while (window.isOpen())
 	{
@@ -32,9 +34,9 @@ int main()
 		}
 
 
-
-		//physicsSystem.PhysicsUpdate();
-		//physicsSystem.UpdateDynamicObject(mainCharacter, false);
+		Physics physicsSystem;
+		physicsSystem.PhysicsUpdate();
+		physicsSystem.UpdateDynamicObject(mainCharacter, false);
 
 		mainCharacter->CharacterInput(mainBoard);
 
@@ -43,6 +45,7 @@ int main()
 		//TODO:Investigate performance issue with the map
 		mainBoard->Update(window);
 		mainCharacter->Update(window);
+		//mainEnemy->Update(window);
 
 		window.display();
 	}

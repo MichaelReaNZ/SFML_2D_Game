@@ -16,6 +16,11 @@ void Physics::PhysicsUpdate()
 
 void Physics::UpdateDynamicObject(Character* _playerChar, bool enabled)
 {
+	//if (_playerChar->m_invincibleTimeCounter > 0) {
+
+	//	_playerChar->m_invincibleTimeCounter = 0;
+	//}
+	//
 	//if (enabled)
 	//{
 	//	if (!_playerChar->colliding) {

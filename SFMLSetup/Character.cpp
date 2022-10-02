@@ -1,27 +1,23 @@
 #include "Character.h"
 
-Character::Character(Board* _Gameboard, sf::Vector2i _BoardPosition)
+Character::Character(sf::Vector2f _ScreenPosition)
 {
-	m_CharactorPos = sf::Vector2f(130, 130);
+	//m_CharactorPos = sf::Vector2f(130, 130);
 
 
 	m_Shape.setSize(sf::Vector2f(64, 64));
 
-	m_CharacterBoardPosition = _BoardPosition;
+	//m_CharacterBoardPosition = _BoardPosition;
 
 	//Convert _BoardPosition to screen position
-	sf::Vector2f screenPos = _Gameboard->BoardPositionToScreenPosition(m_CharacterBoardPosition);
-	m_Shape.setPosition(screenPos);
+	//sf::Vector2f screenPos = _Gameboard->BoardPositionToScreenPosition(8,2);
+	m_Shape.setPosition(_ScreenPosition);
 	//set to center
 	m_Shape.setOrigin(m_Shape.getSize().x / 2, m_Shape.getSize().y / 2);
 
 	m_texture = new sf::Texture();
 	m_texture->loadFromFile("Assets/HeroCharacter.png");
-
-	//set to red
-	//m_Shape.setFillColor(sf::Color::Red);
 	m_Shape.setTexture(m_texture);
-
 }
 
 Character::~Character()
@@ -67,6 +63,31 @@ void Character::CharacterInput(Board* _Gameboard) {
 	{
 		//MoveToTile(boardOffset, _Gameboard);
 		Move(1.0f, _Gameboard->m_WorldCollisionRects);
+	}
+
+	//Enemy collisions
+	if (!m_IsInvincible) {
+		for (int i = 0; i < _Gameboard->m_Enemies.size(); i++)
+		{
+			if (m_Shape.getGlobalBounds().intersects(_Gameboard->m_Enemies[i]->m_Shape.getGlobalBounds()))
+			{
+				std::cout << "Colliding with enemy." << std::endl;
+				m_health -= 1;
+				std::cout << "Reduced health to: " << m_health << std::endl;
+				m_invincibleTimeClock.restart();
+				//m_invincibleTimeCounter = 4.00f;
+				m_IsInvincible = true;
+				std::cout << "Invincible for 4 seconds." << std::endl;
+				m_Shape.setFillColor(sf::Color::Red);
+			}
+		}
+	}
+
+	if (m_IsInvincible && m_invincibleTimeClock.getElapsedTime().asSeconds() > 2) {
+
+		m_IsInvincible = false;
+		std::cout << "No longer Invincible." << std::endl;
+		m_Shape.setFillColor(sf::Color::White);
 	}
 }
 

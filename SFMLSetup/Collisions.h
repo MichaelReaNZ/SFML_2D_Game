@@ -56,4 +56,8 @@ public:
 		}
 	}
 
+	//static bool IsColliding(sf::Shape* _pObjA, sf::Shape* _pObjB) {
+	//	return _pObjA->getGlobalBounds().intersects(_pObjB->getGlobalBounds());
+	//}
+
 };

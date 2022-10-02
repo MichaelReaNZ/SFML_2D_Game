@@ -5,6 +5,10 @@ Board::Board()
 {
 	PreLoadTextureAssetsFromFiles();
 	LoadMapFromFile("Assets/Map.txt");
+
+	//create and place enemies
+	Enemy* mainEnemy = new Enemy(BoardPositionToScreenPosition(11, 4));
+	m_Enemies.push_back(mainEnemy);
 }
 
 Board::~Board()
@@ -32,6 +36,7 @@ void Board::PreLoadTextureAssetsFromFiles() {
 
 void Board::Update(sf::RenderWindow& _Window)
 {
+	//draw board tiles
 	for (int x = 0; x < BOARD_WIDTH; x++)
 	{
 		for (int y = 0; y < BOARD_HEIGHT; y++)
@@ -39,14 +44,19 @@ void Board::Update(sf::RenderWindow& _Window)
 			m_tilePtrArray[x][y]->Update(_Window);
 		}
 	}
+
+	//draw enemies
+	for (int i = 0; i < m_Enemies.size(); i++) {
+		m_Enemies[i]->Update(_Window);
+	}
 }
 
 //convert board position to screen position
-sf::Vector2f Board::BoardPositionToScreenPosition(sf::Vector2i _BoardPosition)
+sf::Vector2f Board::BoardPositionToScreenPosition(int _x, int _y)
 {
 	sf::Vector2f screenPosition;
-	screenPosition.x = _BoardPosition.x * 64;
-	screenPosition.y = _BoardPosition.y * 64;
+	screenPosition.x = _x * 64;
+	screenPosition.y = _y * 64;
 	return screenPosition;
 }
 
@@ -106,20 +116,14 @@ void Board::LoadMapFromFile(std::string _FilePath) {
 
 				//collisions
 				m_tilePtrArray[y][x]->m_AABB = new sf::FloatRect();
-				//m_tilePtrArray[y][x]->m_AABB->top = m_tilePtrArray[y][x]->getShape().getGlobalBounds().top;
-				//m_tilePtrArray[y][x]->m_AABB->left = m_tilePtrArray[y][x]->getShape().getGlobalBounds().left;
-				//m_tilePtrArray[y][x]->m_AABB->height = m_tilePtrArray[y][x]->getShape().getGlobalBounds().height;
-				//m_tilePtrArray[y][x]->m_AABB->width = m_tilePtrArray[y][x]->getShape().getGlobalBounds().width;
 
 				m_tilePtrArray[y][x]->m_AABB->top = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().top;
 				m_tilePtrArray[y][x]->m_AABB->left = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().left;
 				m_tilePtrArray[y][x]->m_AABB->height = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().height;
 				m_tilePtrArray[y][x]->m_AABB->width = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().width;
 
-				//draw red outline on m_AABB
-				//m_AABB
 
-				levelWallTiles.push_back(m_tilePtrArray[y][x]);
+				//m_levelWallTiles.push_back(m_tilePtrArray[y][x]);
 				m_WorldCollisionRects.push_back(m_tilePtrArray[y][x]->m_AABB);
 			}
 			else if (levelArray[y][x] == 'o') {

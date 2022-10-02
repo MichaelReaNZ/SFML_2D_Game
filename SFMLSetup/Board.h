@@ -2,6 +2,7 @@
 #include "Tile.h"
 #include <fstream>
 #include <iostream>
+#include "Enemy.h"
 
 class Board {
 	static const int BOARD_WIDTH = 16;
@@ -11,7 +12,7 @@ class Board {
 
 	Tile* m_tilePtrArray[BOARD_WIDTH][BOARD_HEIGHT];
 
-	std::vector<Tile*> levelWallTiles;
+	//std::vector<Tile*> m_levelWallTiles;
 
 
 	//tile textures
@@ -21,12 +22,13 @@ public:
 	Board();
 	~Board();
 	void Update(sf::RenderWindow& _Window);
-
-	std::vector<sf::FloatRect*> m_WorldCollisionRects;
-	char levelArray[BOARD_WIDTH][BOARD_HEIGHT];
 	void LoadMapFromFile(std::string _FilePath);
 
 	bool CanMoveToTile(sf::Vector2i _TilePosition);
+	sf::Vector2f BoardPositionToScreenPosition(int _x, int _y);
 
-	sf::Vector2f BoardPositionToScreenPosition(sf::Vector2i _BoardPosition);
+	char levelArray[BOARD_WIDTH][BOARD_HEIGHT];
+	std::vector<sf::FloatRect*> m_WorldCollisionRects;
+	std::vector<Enemy*> m_Enemies;
+
 };
