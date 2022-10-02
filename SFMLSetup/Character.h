@@ -21,7 +21,7 @@ private:
 
 	sf::Texture* m_texture;
 
-	int m_health = 4;
+
 
 	sf::Clock m_invincibleTimeClock;
 	bool m_IsInvincible = false;
@@ -30,6 +30,8 @@ private:
 public:
 	sf::RectangleShape m_Shape;
 	sf::Vector2i m_CharacterBoardPosition;
+
+	int m_health = 4;
 
 	//bool colliding = false;
 	//float playerVelocityY = 0.0f;

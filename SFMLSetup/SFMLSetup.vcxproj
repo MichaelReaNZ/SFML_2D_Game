@@ -154,6 +154,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="UiManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
@@ -164,6 +165,7 @@
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Tile.h" />
+    <ClInclude Include="UiManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
