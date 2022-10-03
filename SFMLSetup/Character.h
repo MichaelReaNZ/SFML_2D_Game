@@ -16,16 +16,24 @@ private:
 	//can use this for direction
 	sf::Vector2i m_CharMoveVec = sf::Vector2i(0, 0);
 
-	float m_CharBaseSpeed = 5.0f;
+	float m_CharBaseSpeed = 6.0f;
 	float m_CharSpeed = m_CharBaseSpeed;
 
 	sf::Texture* m_texture;
+	sf::Texture* m_AttackingTexture;
 
 
 
 	sf::Clock m_invincibleTimeClock;
 	bool m_IsInvincible = false;
 
+	bool m_IsAttacking = false;
+
+	sf::Sprite m_CharacterSprite;
+	sf::RectangleShape m_WeaponBoundingBox;
+
+	void Attack(Board* _Gameboard);
+	void ReceiveDamageCollisions(Board* _Gameboard);
 
 public:
 	sf::RectangleShape m_Shape;

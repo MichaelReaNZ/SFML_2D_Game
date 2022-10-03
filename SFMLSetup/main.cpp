@@ -12,7 +12,7 @@ int main()
 
 	//2 tile space for UI
 	sf::RenderWindow window(sf::VideoMode(1024, 1024 + 64 * 2), "Tile Based Project");
-	window.setFramerateLimit(60);
+	window.setFramerateLimit(40);
 
 
 	Board* mainBoard = new Board();
@@ -34,10 +34,11 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window.close();
 
-			if (uiManager.m_IsGameOver) {
-				if (event.type == sf::Event::KeyPressed) {
+
+			if (event.type == sf::Event::KeyPressed) {
+				if (uiManager.m_IsGameOver) {
 					if (event.key.code == sf::Keyboard::Enter) {
-						uiManager.m_IsNewGame = true;
+						//uiManager.m_IsNewGame = true;
 
 						//set back to level 1 start
 						delete mainCharacter;
@@ -66,14 +67,8 @@ int main()
 			window.clear();
 
 
-
-
-
 			mainBoard->Update(window);
 			mainCharacter->Update(window);
-
-
-			//Draw HUD
 			uiManager.Update(window, mainCharacter->m_health);
 
 			window.display();
