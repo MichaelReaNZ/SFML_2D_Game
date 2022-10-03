@@ -70,6 +70,7 @@ void Character::CharacterInput(Board* _Gameboard) {
 	Move(1.0f, _Gameboard->m_WorldCollisionRects);
 	Attack(_Gameboard);
 	ReceiveDamageCollisions(_Gameboard);
+	ItemCollisions(_Gameboard);
 }
 
 void Character::Move(float _dt, std::vector<sf::FloatRect*> Collisions)
@@ -168,6 +169,20 @@ void Character::ReceiveDamageCollisions(Board* _Gameboard) {
 		std::cout << "No longer Invincible." << std::endl;
 		m_Shape.setFillColor(sf::Color::White);
 		m_CharacterSprite.setColor(sf::Color::White);
+	}
+}
+
+void Character::ItemCollisions(Board* _Gameboard) {
+
+	//Item collisions
+	for (int i = 0; i < _Gameboard->m_Items.size(); i++)
+	{
+		if (m_Shape.getGlobalBounds().intersects(_Gameboard->m_Items[i]->m_Shape.getGlobalBounds()))
+		{
+			std::cout << "Colliding with key." << std::endl;
+			m_HasKey = true;
+			_Gameboard->m_Items.erase(_Gameboard->m_Items.begin() + i);
+		}
 	}
 }
 

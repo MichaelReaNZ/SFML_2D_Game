@@ -27,19 +27,21 @@ private:
 	sf::Clock m_invincibleTimeClock;
 	bool m_IsInvincible = false;
 	bool m_IsAttacking = false;
-	bool m_HasKey = false;
+
 
 	sf::Sprite m_CharacterSprite;
 	sf::RectangleShape m_WeaponBoundingBox;
 
 	void Attack(Board* _Gameboard);
 	void ReceiveDamageCollisions(Board* _Gameboard);
+	void ItemCollisions(Board* _Gameboard);
 
 public:
 	sf::RectangleShape m_Shape;
 	sf::Vector2i m_CharacterBoardPosition;
 
 	int m_health = 2;
+	bool m_HasKey = false;
 
 	//bool colliding = false;
 	//float playerVelocityY = 0.0f;

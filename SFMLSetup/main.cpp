@@ -69,7 +69,7 @@ int main()
 
 			mainBoard->Update(window);
 			mainCharacter->Update(window);
-			uiManager.Update(window, mainCharacter->m_health);
+			uiManager.Update(window, mainCharacter->m_health, mainCharacter->m_HasKey);
 
 			window.display();
 		}
