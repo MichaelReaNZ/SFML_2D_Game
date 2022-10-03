@@ -8,7 +8,6 @@ Character::Character(sf::Vector2f _ScreenPosition)
 
 	m_texture = new sf::Texture();
 	m_texture->loadFromFile("Assets/HeroCharacter.png");
-	//m_Shape.setTexture(m_texture);
 
 	m_CharacterSprite.setTexture(*m_texture);
 	m_CharacterSprite.setOrigin(m_Shape.getOrigin());
@@ -17,15 +16,11 @@ Character::Character(sf::Vector2f _ScreenPosition)
 	m_AttackingTexture = new sf::Texture();
 	m_AttackingTexture->loadFromFile("Assets/HeroCharacterWithSword.png");
 
-
-
 	//collision box for weapon
 	m_WeaponBoundingBox.setSize(sf::Vector2f(64, 16));
 	m_WeaponBoundingBox.setOrigin(m_WeaponBoundingBox.getSize().x / 2, m_WeaponBoundingBox.getSize().y / 2);
 	m_WeaponBoundingBox.setPosition(sf::Vector2f(m_Shape.getPosition().x + m_Shape.getGlobalBounds().width, m_Shape.getPosition().y));
 	m_WeaponBoundingBox.setFillColor(sf::Color::Magenta);
-
-
 }
 
 Character::~Character()
@@ -184,11 +179,18 @@ void Character::Attack(Board* _Gameboard) {
 		//move the weapon bounding box next to the character if attacking
 		m_WeaponBoundingBox.setPosition(sf::Vector2f(m_Shape.getPosition().x + m_Shape.getGlobalBounds().width, m_Shape.getPosition().y));
 
+		int numberOfEnemiesRemain = _Gameboard->m_Enemies.size();
 		//check if the weapon bounding box is colliding with an enemy
-		for (int i = 0; i < _Gameboard->m_Enemies.size(); i++)
+		for (int i = 0; i < numberOfEnemiesRemain; i++)
 		{
+			//enemy death
 			if (m_WeaponBoundingBox.getGlobalBounds().intersects(_Gameboard->m_Enemies[i]->m_Shape.getGlobalBounds()))
 			{
+				if (numberOfEnemiesRemain == 1) {
+					//key 
+					_Gameboard->SpawnKey();
+				}
+
 				std::cout << "Weapon is Colliding with enemy." << std::endl;
 
 				//remove enemy from enemy array
@@ -196,6 +198,9 @@ void Character::Attack(Board* _Gameboard) {
 				_Gameboard->m_Enemies.erase(_Gameboard->m_Enemies.begin() + i);
 
 				//play enemy dead sound
+
+				std::cout << "Enemy killed" << std::endl;
+				//if that was the last enemy then drop the key in it's position.
 
 			}
 		}

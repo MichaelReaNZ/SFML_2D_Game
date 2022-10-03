@@ -16,6 +16,24 @@ Board::~Board()
 	for (int i = 0; i < m_Enemies.size(); i++) {
 		delete m_Enemies[i];
 	}
+
+	for (int i = 0; i < m_WorldCollisionRects.size(); i++) {
+		delete m_WorldCollisionRects[i];
+	}
+
+	for (int i = 0; i < 3; i++) {
+		delete m_tileTextureArray[i];
+	}
+
+	for (int i = 0; i < BOARD_WIDTH; i++) {
+		for (int j = 0; j < BOARD_HEIGHT; j++) {
+			delete m_tilePtrArray[i][j];
+		}
+	}
+
+	for (int i = 0; i < m_Items.size(); i++) {
+		delete m_Items[i];
+	}
 }
 
 void Board::PreLoadTextureAssetsFromFiles() {
@@ -39,6 +57,11 @@ void Board::Update(sf::RenderWindow& _Window)
 		{
 			m_tilePtrArray[x][y]->Update(_Window);
 		}
+	}
+
+	//draw items
+	for (int i = 0; i < m_Items.size(); i++) {
+		m_Items[i]->Update(_Window);
 	}
 
 	//draw enemies
@@ -133,4 +156,10 @@ void Board::LoadMapFromFile(std::string _FilePath) {
 
 		}
 	}
+}
+
+//Will span underneath enemy when it is killed
+void Board::SpawnKey() {
+	sf::Vector2f lastEnemyLocation = m_Enemies.front()->m_Shape.getPosition();
+	m_Items.push_back(new Item(lastEnemyLocation));
 }

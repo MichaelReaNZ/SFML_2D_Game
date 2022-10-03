@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include "Enemy.h"
+#include "Item.h"
 
 class Board {
 	static const int BOARD_WIDTH = 16;
@@ -13,6 +14,8 @@ class Board {
 	Tile* m_tilePtrArray[BOARD_WIDTH][BOARD_HEIGHT];
 
 	//std::vector<Tile*> m_levelWallTiles;
+
+
 
 
 	//tile textures
@@ -30,5 +33,8 @@ public:
 	char levelArray[BOARD_WIDTH][BOARD_HEIGHT];
 	std::vector<sf::FloatRect*> m_WorldCollisionRects;
 	std::vector<Enemy*> m_Enemies;
+	std::vector<Item*> m_Items;
+
+	void SpawnKey();
 
 };

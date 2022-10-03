@@ -26,8 +26,8 @@ private:
 
 	sf::Clock m_invincibleTimeClock;
 	bool m_IsInvincible = false;
-
 	bool m_IsAttacking = false;
+	bool m_HasKey = false;
 
 	sf::Sprite m_CharacterSprite;
 	sf::RectangleShape m_WeaponBoundingBox;
