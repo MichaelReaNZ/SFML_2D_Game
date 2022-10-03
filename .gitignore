@@ -1,1 +1,11 @@
 ﻿.vs/SFMLProject1
+*.exe
+*.idb
+*.obj
+SFMLSetup/Debug/SFML_2D_Game.Build.CppClean.log
+*.recipe
+*.ilk
+*.log
+SFMLSetup/Debug/SFMLSetup.vcxproj.FileListAbsolute.txt
+SFMLSetup/Debug/SFML_2D_Game.tlog
+*.pdb
