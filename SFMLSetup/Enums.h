@@ -6,3 +6,9 @@ enum Direction { Up, Down, Left, Right };
 //convert enum direction to string
 std::string EnumToString(Direction _dir);
 
+//item type
+enum ItemType {
+	KEY,
+	DOOR
+};
+

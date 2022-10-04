@@ -33,7 +33,7 @@ void Character::Update(sf::RenderWindow& _Window)
 	_Window.draw(m_Shape);
 	_Window.draw(m_CharacterSprite);
 	//for testing
-	_Window.draw(m_WeaponBoundingBox);
+	//_Window.draw(m_WeaponBoundingBox);
 }
 
 void Character::CharacterInput(Board* _Gameboard) {
@@ -179,9 +179,28 @@ void Character::ItemCollisions(Board* _Gameboard) {
 	{
 		if (m_Shape.getGlobalBounds().intersects(_Gameboard->m_Items[i]->m_Shape.getGlobalBounds()))
 		{
-			std::cout << "Colliding with key." << std::endl;
-			m_HasKey = true;
-			_Gameboard->m_Items.erase(_Gameboard->m_Items.begin() + i);
+			if (_Gameboard->m_Items[i]->m_ItemType == KEY) {
+				std::cout << "Colliding with key." << std::endl;
+				m_HasKey = true;
+				_Gameboard->m_Items.erase(_Gameboard->m_Items.begin() + i);
+			}
+			else if (_Gameboard->m_Items[i]->m_ItemType == DOOR) {
+
+
+
+				if (m_HasKey) {
+					std::cout << "Colliding with door going to next level." << std::endl;
+					//if character is the left of the door
+
+				}
+				else {
+					Collisions::ResolveXCollisions(&m_Shape, new sf::FloatRect(_Gameboard->m_Items[i]->m_Shape.getGlobalBounds().left, _Gameboard->m_Items[i]->m_Shape.getGlobalBounds().top, _Gameboard->m_Items[i]->m_Shape.getGlobalBounds().width, _Gameboard->m_Items[i]->m_Shape.getGlobalBounds().height));
+					std::cout << "Colliding with door but it's locked." << std::endl;
+				}
+
+				//play sound
+			//take player to next level
+			}
 		}
 	}
 }

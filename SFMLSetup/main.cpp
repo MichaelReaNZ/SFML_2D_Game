@@ -16,7 +16,7 @@ int main()
 
 
 	Board* mainBoard = new Board();
-	Character* mainCharacter = new Character(mainBoard->BoardPositionToScreenPosition(2, 2));
+	Character* mainCharacter = new Character(mainBoard->BoardPositionToScreenPosition(2, 3));
 
 	//adding UI area 64
 	//offset by half the tile size because of the tile center being the origin

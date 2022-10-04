@@ -9,6 +9,9 @@ Board::Board()
 	//create and place enemies
 	Enemy* mainEnemy = new Enemy(BoardPositionToScreenPosition(11, 4));
 	m_Enemies.push_back(mainEnemy);
+
+	//create and place door
+	m_Items.push_back(new Item(BoardPositionToScreenPosition(0, 1), DOOR));
 }
 
 Board::~Board()
@@ -132,18 +135,6 @@ void Board::LoadMapFromFile(std::string _FilePath) {
 			if (levelArray[y][x] == 'x') {
 				m_tilePtrArray[y][x] = new Tile(sf::Vector2f(x * 64, y * 64), TileType_Wall, m_tileTextureArray[TileType_Wall]);
 				m_tilePtrArray[y][x]->m_TilePosition = sf::Vector2i(x, y);
-
-				//collisions
-				m_tilePtrArray[y][x]->m_AABB = new sf::FloatRect();
-
-				m_tilePtrArray[y][x]->m_AABB->top = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().top;
-				m_tilePtrArray[y][x]->m_AABB->left = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().left;
-				m_tilePtrArray[y][x]->m_AABB->height = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().height;
-				m_tilePtrArray[y][x]->m_AABB->width = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().width;
-
-
-				//m_levelWallTiles.push_back(m_tilePtrArray[y][x]);
-				m_WorldCollisionRects.push_back(m_tilePtrArray[y][x]->m_AABB);
 			}
 			else if (levelArray[y][x] == 'o') {
 				m_tilePtrArray[y][x] = new Tile(sf::Vector2f(x * 64, y * 64), TileType_Floor, m_tileTextureArray[TileType_Floor]);
@@ -154,6 +145,18 @@ void Board::LoadMapFromFile(std::string _FilePath) {
 				m_tilePtrArray[y][x]->m_TilePosition = sf::Vector2i(x, y);
 			}
 
+			//Collision boxes
+			if (levelArray[y][x] == 's' || levelArray[y][x] == 'x') {
+				m_tilePtrArray[y][x]->m_AABB = new sf::FloatRect();
+
+				m_tilePtrArray[y][x]->m_AABB->top = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().top;
+				m_tilePtrArray[y][x]->m_AABB->left = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().left;
+				m_tilePtrArray[y][x]->m_AABB->height = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().height;
+				m_tilePtrArray[y][x]->m_AABB->width = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().width;
+
+				//m_levelWallTiles.push_back(m_tilePtrArray[y][x]);
+				m_WorldCollisionRects.push_back(m_tilePtrArray[y][x]->m_AABB);
+			}
 		}
 	}
 }
@@ -161,5 +164,5 @@ void Board::LoadMapFromFile(std::string _FilePath) {
 //Will span underneath enemy when it is killed
 void Board::SpawnKey() {
 	sf::Vector2f lastEnemyLocation = m_Enemies.front()->m_Shape.getPosition();
-	m_Items.push_back(new Item(lastEnemyLocation));
+	m_Items.push_back(new Item(lastEnemyLocation, KEY));
 }
