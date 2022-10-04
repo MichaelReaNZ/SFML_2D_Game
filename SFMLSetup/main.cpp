@@ -63,6 +63,7 @@ int main()
 			if (deletingRowIndex >= 0) {
 
 				//if there are some cols in that row to black out
+
 				if (deletingColIndex >= 0) {
 					mainBoard->m_tilePtrArray[deletingRowIndex][deletingColIndex]->m_TileSprite.setScale(0, 0);
 					tilesBlackedOut++;

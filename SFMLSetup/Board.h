@@ -6,8 +6,8 @@
 #include "Item.h"
 
 class Board {
-	static const int BOARD_WIDTH = 16;
-	static const int BOARD_HEIGHT = 16;
+	static const int BOARD_WIDTH = 16 * 2;
+	static const int BOARD_HEIGHT = 16 * 2;
 
 	static const int TILE_SIZE_IN_PIXELS = 64;
 

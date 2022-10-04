@@ -4,7 +4,8 @@
 Board::Board()
 {
 	PreLoadTextureAssetsFromFiles();
-	LoadMapFromFile("Assets/Map.txt");
+	LoadMapFromFile("Assets/PixelMap.png");
+	//LoadMapFromFile("Assets/Map.txt");
 
 	//create and place enemies
 	Enemy* mainEnemy = new Enemy(BoardPositionToScreenPosition(11, 4));
@@ -112,54 +113,118 @@ bool Board::CanMoveToTile(sf::Vector2i _TilePosition)
 }
 
 void Board::LoadMapFromFile(std::string _FilePath) {
-	std::fstream loadFileStream;
-	loadFileStream.open(_FilePath, std::ios::in);
+	int scale = 4;
 
-	std::string loadFileString;
-	int lineCount = 0;
+	//load image
+	sf::Image pixelMapImage = sf::Image();
+	pixelMapImage.loadFromFile(_FilePath);
 
-	if (loadFileStream.is_open()) {
-		while (std::getline(loadFileStream, loadFileString)) {
-			for (int i = 0; i < loadFileString.size(); i++) {
-				m_levelArray[lineCount][i] = loadFileString[i];
-			}
-			lineCount++;
-		}
-		loadFileStream.close();
-	}
+	//get image size
+	sf::Vector2u imageSize = pixelMapImage.getSize();
 
-	for (int x = 0; x < BOARD_HEIGHT; x++)
+	//for each pixel in image add tile to m_tilePtrArray
+	for (int x = 0; x < imageSize.x; x += scale)
 	{
-		for (int y = 0; y < BOARD_WIDTH; y++)
+		for (int y = 0; y < imageSize.y; y += scale)
 		{
-			if (m_levelArray[y][x] == 'x') {
-				m_tilePtrArray[y][x] = new Tile(sf::Vector2f(x * 64, y * 64), TileType_Wall, m_tileTextureArray[TileType_Wall]);
-				m_tilePtrArray[y][x]->m_TilePosition = sf::Vector2i(x, y);
+			sf::Color color = pixelMapImage.getPixel(x, y);
+			sf::Uint8 r = color.r;
+			sf::Uint8 g = color.g;
+			sf::Uint8 b = color.b;
+
+			TileType tileType = TileType_Sea;
+
+			//brown is mountain
+			if (r == 58 && g == 29 && b == 0) {
+				tileType = TileType_Wall;
+
 			}
-			else if (m_levelArray[y][x] == 'o') {
-				m_tilePtrArray[y][x] = new Tile(sf::Vector2f(x * 64, y * 64), TileType_Floor, m_tileTextureArray[TileType_Floor]);
-				m_tilePtrArray[y][x]->m_TilePosition = sf::Vector2i(x, y);
+			else if (r == 0 && g == 0 && b == 255) {
+				tileType = TileType_Sea;
 			}
-			else if (m_levelArray[y][x] == 's') {
-				m_tilePtrArray[y][x] = new Tile(sf::Vector2f(x * 64, y * 64), TileType_Sea, m_tileTextureArray[TileType_Sea]);
-				m_tilePtrArray[y][x]->m_TilePosition = sf::Vector2i(x, y);
+			else if (r == 0 && g == 128 && b == 0) {
+				tileType = TileType_Floor;
 			}
+
+			int yScale = y / scale;
+			int xScale = x / scale;
+
+			m_tilePtrArray[yScale][xScale] = new Tile(sf::Vector2f(xScale * 64, yScale * 64), tileType, m_tileTextureArray[tileType]);
+			m_tilePtrArray[yScale][xScale]->m_TilePosition = sf::Vector2i(xScale, yScale);
 
 			//Collision boxes
-			if (m_levelArray[y][x] == 's' || m_levelArray[y][x] == 'x') {
-				m_tilePtrArray[y][x]->m_AABB = new sf::FloatRect();
+			if (tileType == TileType_Sea || tileType == TileType_Wall) {
+				m_tilePtrArray[yScale][xScale]->m_AABB = new sf::FloatRect();
 
-				m_tilePtrArray[y][x]->m_AABB->top = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().top;
-				m_tilePtrArray[y][x]->m_AABB->left = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().left;
-				m_tilePtrArray[y][x]->m_AABB->height = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().height;
-				m_tilePtrArray[y][x]->m_AABB->width = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().width;
+				m_tilePtrArray[yScale][xScale]->m_AABB->top = m_tilePtrArray[yScale][xScale]->getSprite().getGlobalBounds().top;
+				m_tilePtrArray[yScale][xScale]->m_AABB->left = m_tilePtrArray[yScale][xScale]->getSprite().getGlobalBounds().left;
+				m_tilePtrArray[yScale][xScale]->m_AABB->height = m_tilePtrArray[yScale][xScale]->getSprite().getGlobalBounds().height;
+				m_tilePtrArray[yScale][xScale]->m_AABB->width = m_tilePtrArray[yScale][xScale]->getSprite().getGlobalBounds().width;
 
 				//m_levelWallTiles.push_back(m_tilePtrArray[y][x]);
-				m_WorldCollisionRects.push_back(m_tilePtrArray[y][x]->m_AABB);
+				m_WorldCollisionRects.push_back(m_tilePtrArray[yScale][xScale]->m_AABB);
 			}
 		}
 	}
 }
+
+
+
+
+//create array of pixels
+//sf::Uint8* pixels = new sf::Uint8[imageSize.x * imageSize.y * 4];
+
+
+
+
+	//std::fstream loadFileStream;
+	//loadFileStream.open(_FilePath, std::ios::in);
+
+	//std::string loadFileString;
+	//int lineCount = 0;
+
+	//if (loadFileStream.is_open()) {
+	//	while (std::getline(loadFileStream, loadFileString)) {
+	//		for (int i = 0; i < loadFileString.size(); i++) {
+	//			m_levelArray[lineCount][i] = loadFileString[i];
+	//		}
+	//		lineCount++;
+	//	}
+	//	loadFileStream.close();
+	//}
+
+	//for (int x = 0; x < BOARD_HEIGHT; x++)
+	//{
+	//	for (int y = 0; y < BOARD_WIDTH; y++)
+	//	{
+	//		if (m_levelArray[y][x] == 'x') {
+	//			m_tilePtrArray[y][x] = new Tile(sf::Vector2f(x * 64, y * 64), TileType_Wall, m_tileTextureArray[TileType_Wall]);
+	//			m_tilePtrArray[y][x]->m_TilePosition = sf::Vector2i(x, y);
+	//		}
+	//		else if (m_levelArray[y][x] == 'o') {
+	//			m_tilePtrArray[y][x] = new Tile(sf::Vector2f(x * 64, y * 64), TileType_Floor, m_tileTextureArray[TileType_Floor]);
+	//			m_tilePtrArray[y][x]->m_TilePosition = sf::Vector2i(x, y);
+	//		}
+	//		else if (m_levelArray[y][x] == 's') {
+	//			m_tilePtrArray[y][x] = new Tile(sf::Vector2f(x * 64, y * 64), TileType_Sea, m_tileTextureArray[TileType_Sea]);
+	//			m_tilePtrArray[y][x]->m_TilePosition = sf::Vector2i(x, y);
+	//		}
+
+	//		//Collision boxes
+	//		if (m_levelArray[y][x] == 's' || m_levelArray[y][x] == 'x') {
+	//			m_tilePtrArray[y][x]->m_AABB = new sf::FloatRect();
+
+	//			m_tilePtrArray[y][x]->m_AABB->top = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().top;
+	//			m_tilePtrArray[y][x]->m_AABB->left = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().left;
+	//			m_tilePtrArray[y][x]->m_AABB->height = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().height;
+	//			m_tilePtrArray[y][x]->m_AABB->width = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().width;
+
+	//			//m_levelWallTiles.push_back(m_tilePtrArray[y][x]);
+	//			m_WorldCollisionRects.push_back(m_tilePtrArray[y][x]->m_AABB);
+	//		}
+	//	}
+	//}
+//}
 
 //Will span underneath enemy when it is killed
 void Board::SpawnKey() {
