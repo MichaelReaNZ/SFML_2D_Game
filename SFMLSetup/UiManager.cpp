@@ -35,21 +35,24 @@ void UiManager::Update(sf::RenderWindow& _Window, int _CharacterHealth, bool _Ha
 		return;
 	}
 
-
-
 	_Window.draw(hudAreaBox);
+
+	sf::Texture* heartTexture = new sf::Texture();
+	heartTexture->loadFromFile("Assets/Heart.png");
 
 	//draw a box from the right to left for each health point
 	for (int i = 0; i < _CharacterHealth; i++)
 	{
 		sf::RectangleShape HealthBar;
-		HealthBar.setSize(sf::Vector2f(32, 32));
+		HealthBar.setSize(sf::Vector2f(64, 64));
 		HealthBar.setOrigin(HealthBar.getSize().x / 2, HealthBar.getSize().y / 2);
 		//HealthBar.setPosition(sf::Vector2f(hudAreaBox.getGlobalBounds().width - (i * 32), hudAreaBox.getGlobalBounds().top));
 		HealthBar.setPosition(sf::Vector2f(hudAreaBox.getGlobalBounds().width - (i * 64) - 64 * 2, hudAreaBox.getPosition().y + hudAreaBox.getGlobalBounds().height / 2));
-		HealthBar.setFillColor(sf::Color::Red);
+		//HealthBar.setFillColor(sf::Color::Red);
+		HealthBar.setTexture(heartTexture);
 		_Window.draw(HealthBar);
 	}
+	delete heartTexture;
 
 	//key
 	if (_HasKey) {

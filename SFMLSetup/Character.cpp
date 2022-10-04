@@ -173,8 +173,6 @@ void Character::ReceiveDamageCollisions(Board* _Gameboard) {
 }
 
 void Character::ItemCollisions(Board* _Gameboard) {
-
-	//Item collisions
 	for (int i = 0; i < _Gameboard->m_Items.size(); i++)
 	{
 		if (m_Shape.getGlobalBounds().intersects(_Gameboard->m_Items[i]->m_Shape.getGlobalBounds()))
@@ -185,21 +183,24 @@ void Character::ItemCollisions(Board* _Gameboard) {
 				_Gameboard->m_Items.erase(_Gameboard->m_Items.begin() + i);
 			}
 			else if (_Gameboard->m_Items[i]->m_ItemType == DOOR) {
-
-
-
 				if (m_HasKey) {
-					std::cout << "Colliding with door going to next level." << std::endl;
+					std::cout << "Colliding with door." << std::endl;
+					//TODO:Unlock door sound
+					m_HasKey = false;
 					//if character is the left of the door
+					if (m_Shape.getPosition().x < _Gameboard->m_Items[i]->m_Shape.getPosition().x) {
 
+						std::cout << "Have passed through door." << std::endl;
+						//TODO:Move to next level
+					}
 				}
 				else {
 					Collisions::ResolveXCollisions(&m_Shape, new sf::FloatRect(_Gameboard->m_Items[i]->m_Shape.getGlobalBounds().left, _Gameboard->m_Items[i]->m_Shape.getGlobalBounds().top, _Gameboard->m_Items[i]->m_Shape.getGlobalBounds().width, _Gameboard->m_Items[i]->m_Shape.getGlobalBounds().height));
 					std::cout << "Colliding with door but it's locked." << std::endl;
 				}
 
-				//play sound
-			//take player to next level
+
+				//take player to next level
 			}
 		}
 	}
