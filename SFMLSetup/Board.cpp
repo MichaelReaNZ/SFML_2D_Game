@@ -121,7 +121,7 @@ void Board::LoadMapFromFile(std::string _FilePath) {
 	if (loadFileStream.is_open()) {
 		while (std::getline(loadFileStream, loadFileString)) {
 			for (int i = 0; i < loadFileString.size(); i++) {
-				levelArray[lineCount][i] = loadFileString[i];
+				m_levelArray[lineCount][i] = loadFileString[i];
 			}
 			lineCount++;
 		}
@@ -132,21 +132,21 @@ void Board::LoadMapFromFile(std::string _FilePath) {
 	{
 		for (int y = 0; y < BOARD_WIDTH; y++)
 		{
-			if (levelArray[y][x] == 'x') {
+			if (m_levelArray[y][x] == 'x') {
 				m_tilePtrArray[y][x] = new Tile(sf::Vector2f(x * 64, y * 64), TileType_Wall, m_tileTextureArray[TileType_Wall]);
 				m_tilePtrArray[y][x]->m_TilePosition = sf::Vector2i(x, y);
 			}
-			else if (levelArray[y][x] == 'o') {
+			else if (m_levelArray[y][x] == 'o') {
 				m_tilePtrArray[y][x] = new Tile(sf::Vector2f(x * 64, y * 64), TileType_Floor, m_tileTextureArray[TileType_Floor]);
 				m_tilePtrArray[y][x]->m_TilePosition = sf::Vector2i(x, y);
 			}
-			else if (levelArray[y][x] == 's') {
+			else if (m_levelArray[y][x] == 's') {
 				m_tilePtrArray[y][x] = new Tile(sf::Vector2f(x * 64, y * 64), TileType_Sea, m_tileTextureArray[TileType_Sea]);
 				m_tilePtrArray[y][x]->m_TilePosition = sf::Vector2i(x, y);
 			}
 
 			//Collision boxes
-			if (levelArray[y][x] == 's' || levelArray[y][x] == 'x') {
+			if (m_levelArray[y][x] == 's' || m_levelArray[y][x] == 'x') {
 				m_tilePtrArray[y][x]->m_AABB = new sf::FloatRect();
 
 				m_tilePtrArray[y][x]->m_AABB->top = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().top;

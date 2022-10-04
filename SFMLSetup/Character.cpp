@@ -186,12 +186,13 @@ void Character::ItemCollisions(Board* _Gameboard) {
 				if (m_HasKey) {
 					std::cout << "Colliding with door." << std::endl;
 					//TODO:Unlock door sound
-					m_HasKey = false;
+
 					//if character is the left of the door
 					if (m_Shape.getPosition().x < _Gameboard->m_Items[i]->m_Shape.getPosition().x) {
 
 						std::cout << "Have passed through door." << std::endl;
 						//TODO:Move to next level
+						_Gameboard->m_IsLevelComplete = true;
 					}
 				}
 				else {

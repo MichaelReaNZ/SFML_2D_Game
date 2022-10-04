@@ -5,14 +5,14 @@
 #include "Enemy.h"
 #include "UiManager.h"
 
-
 int main()
 {
 	UiManager uiManager = UiManager();
 
 	//2 tile space for UI
 	sf::RenderWindow window(sf::VideoMode(1024, 1024 + 64 * 2), "Tile Based Project");
-	window.setFramerateLimit(40);
+	const int frameLimit = 60;
+	window.setFramerateLimit(frameLimit);
 
 
 	Board* mainBoard = new Board();
@@ -24,6 +24,16 @@ int main()
 
 
 	Physics physicsSystem;
+
+	//level end animation remove each tile
+	//get size
+	int n_rows = sizeof(mainBoard->m_tilePtrArray) / sizeof(mainBoard->m_tilePtrArray[0]);
+	int n_cols = sizeof(mainBoard->m_tilePtrArray[0]) / sizeof(mainBoard->m_tilePtrArray[0][0]);
+
+	int deletingRowIndex = n_rows - 1;
+	int deletingColIndex = n_cols - 1;
+
+	int tilesBlackedOut = 0;
 
 	while (window.isOpen())
 	{
@@ -54,10 +64,36 @@ int main()
 
 
 
+		//end level animation
+		if (mainBoard->m_IsLevelComplete) {
 
 
 
-		if (!uiManager.m_IsGameOver) {
+			//if there are some rows left to black out
+			if (deletingRowIndex >= 0) {
+
+				//if there are some cols in that row to black out
+				if (deletingColIndex >= 0) {
+					mainBoard->m_tilePtrArray[deletingRowIndex][deletingColIndex]->m_TileSprite.setScale(0, 0);
+					tilesBlackedOut++;
+					deletingColIndex--;
+					if (tilesBlackedOut <= 9000) {
+						//slow it down and speed up as more tiles removed
+						window.setFramerateLimit(tilesBlackedOut * 10 + frameLimit);
+					}
+				}
+				else {
+					//if there are no more cols in that row to black out go to next (prev) row
+					deletingRowIndex--;
+					//reset col index;
+					deletingColIndex = n_rows - 1;
+				}
+			}
+		}
+
+
+
+		if (!uiManager.m_IsGameOver) {// && (tilesBlackedOut < n_cols * n_rows)) {
 			physicsSystem.PhysicsUpdate();
 			physicsSystem.UpdateDynamicObject(mainCharacter, false);
 

@@ -17,9 +17,10 @@ private:
 	//sf::RectangleShape m_TileShape; // the 2d image of the tile
 	sf::Texture* m_Texture; // the texture of the tile
 
-	sf::Sprite m_TileSprite;
+
 
 public:
+	sf::Sprite m_TileSprite;
 	sf::Vector2i m_TilePosition;
 	sf::FloatRect* m_AABB; //the bounding volume
 
