@@ -14,25 +14,20 @@ int main()
 	const int frameLimit = 60;
 	window.setFramerateLimit(frameLimit);
 
-
 	Board* mainBoard = new Board();
 	Character* mainCharacter = new Character(mainBoard->BoardPositionToScreenPosition(2, 3));
 
 	//adding UI area 64
 	//offset by half the tile size because of the tile center being the origin
 	sf::View gameView(sf::FloatRect(-32, -32 - 64 * 2, 1024, 1024 + 64 * 2));
-
-
 	Physics physicsSystem;
 
 	//level end animation remove each tile
 	//get size
 	int n_rows = sizeof(mainBoard->m_tilePtrArray) / sizeof(mainBoard->m_tilePtrArray[0]);
 	int n_cols = sizeof(mainBoard->m_tilePtrArray[0]) / sizeof(mainBoard->m_tilePtrArray[0][0]);
-
 	int deletingRowIndex = n_rows - 1;
 	int deletingColIndex = n_cols - 1;
-
 	int tilesBlackedOut = 0;
 
 	while (window.isOpen())
@@ -62,13 +57,8 @@ int main()
 			}
 		}
 
-
-
 		//end level animation
 		if (mainBoard->m_IsLevelComplete) {
-
-
-
 			//if there are some rows left to black out
 			if (deletingRowIndex >= 0) {
 
@@ -77,10 +67,6 @@ int main()
 					mainBoard->m_tilePtrArray[deletingRowIndex][deletingColIndex]->m_TileSprite.setScale(0, 0);
 					tilesBlackedOut++;
 					deletingColIndex--;
-					if (tilesBlackedOut <= 9000) {
-						//slow it down and speed up as more tiles removed
-						window.setFramerateLimit(tilesBlackedOut * 10 + frameLimit);
-					}
 				}
 				else {
 					//if there are no more cols in that row to black out go to next (prev) row
@@ -91,9 +77,7 @@ int main()
 			}
 		}
 
-
-
-		if (!uiManager.m_IsGameOver) {// && (tilesBlackedOut < n_cols * n_rows)) {
+		if (!uiManager.m_IsGameOver) {
 			physicsSystem.PhysicsUpdate();
 			physicsSystem.UpdateDynamicObject(mainCharacter, false);
 
@@ -101,7 +85,6 @@ int main()
 
 			window.setView(gameView);
 			window.clear();
-
 
 			mainBoard->Update(window);
 			mainCharacter->Update(window);
