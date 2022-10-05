@@ -1,5 +1,6 @@
 #include "UiManager.h"
 
+
 UiManager::UiManager()
 {
 }
@@ -114,5 +115,193 @@ void UiManager::Update(sf::RenderWindow& _Window, int _CharacterHealth, bool _Ha
 		moveText.setFillColor(sf::Color::White);
 		moveText.setPosition(sf::Vector2f(hudAreaBox.getGlobalBounds().left + 64, view.getViewport().top + 1024 - 64 * 3));
 		_Window.draw(moveText);
+	}
+}
+
+void UiManager::UpdateDebugWindow(sf::RenderWindow& _DebugWindow, Character* _Character, Board* _Board)
+{
+	float width = _DebugWindow.getSize().x;
+	float height = _DebugWindow.getSize().y;
+
+	int howManyRows = 5;
+
+	sf::Font font;
+	font.loadFromFile("Assets/font.ttf");
+
+	sf::Text text;
+	text.setFont(font);
+	text.setCharacterSize(58);
+	text.setFillColor(sf::Color::Black);
+
+	sf::Text textValue;
+	textValue.setFont(font);
+	textValue.setCharacterSize(58);
+	textValue.setFillColor(sf::Color::Black);
+
+	sf::Text minusText;
+	minusText.setFont(font);
+	minusText.setString("-");
+	minusText.setCharacterSize(48);
+	minusText.setFillColor(sf::Color::Black);
+
+	sf::Text plusText;
+	plusText.setFont(font);
+	plusText.setString("+");
+	plusText.setCharacterSize(48);
+	plusText.setFillColor(sf::Color::Black);
+
+	for (int i = 0; i < howManyRows; i++)
+	{
+		sf::RectangleShape rect;
+		rect.setSize(sf::Vector2f(width, height / howManyRows));
+		rect.setFillColor(sf::Color::White);
+		rect.setOutlineColor(sf::Color::Blue);
+		rect.setOutlineThickness(5);
+		rect.setPosition(sf::Vector2f(0, i * height / howManyRows));
+		_DebugWindow.draw(rect);
+
+		//draw a box on the left with a - symbol
+		sf::RectangleShape rectMinus;
+		rectMinus.setSize(sf::Vector2f(width / 5, height / howManyRows));
+		rectMinus.setFillColor(sf::Color::Green);
+		rectMinus.setOutlineColor(sf::Color::Blue);
+		rectMinus.setOutlineThickness(1);
+		rectMinus.setPosition(sf::Vector2f(0, (i * (height / howManyRows))));
+		_DebugWindow.draw(rectMinus);
+
+		//draw the - text in the middle of the rectMinus
+		minusText.setPosition(sf::Vector2f(width / 10, (i * height / howManyRows) + (height / howManyRows) / 2));
+		_DebugWindow.draw(minusText);
+
+		//draw a box on the right with a + symbol
+		sf::RectangleShape rectPlus;
+		rectPlus.setSize(sf::Vector2f(width / 5, height / howManyRows));
+		rectPlus.setFillColor(sf::Color::Green);
+		rectPlus.setOutlineColor(sf::Color::Blue);
+		rectPlus.setOutlineThickness(1);
+		rectPlus.setPosition(sf::Vector2f(width - (width / 5), (i * height / howManyRows)));
+		_DebugWindow.draw(rectPlus);
+
+		//draw the + text
+		plusText.setPosition(sf::Vector2f(width - (width / 10), (i * height / howManyRows) + (height / howManyRows) / 2));
+		_DebugWindow.draw(plusText);
+
+		//fill the first one with the text player speed
+		if (i == 0)
+		{
+			text.setString("Player Speed: ");
+			textValue.setString(std::to_string(_Character->m_CharSpeed));
+		}
+
+		if (i == 1)
+		{
+			text.setString("Score: ");
+			textValue.setString(std::to_string(_Board->m_Score));
+		}
+		if (i == 2)
+		{
+			text.setString("Health: ");
+			textValue.setString(std::to_string(_Character->m_health));
+		}
+		if (i == 3)
+		{
+			text.setString("Enemy Move Speed: ");
+			textValue.setString(std::to_string(_Board->m_EnemyMoveSpeed));
+		}
+		if (i == 4)
+		{
+			text.setString("Enemy Shoot Speed: ");
+			textValue.setString(std::to_string(_Board->m_EnemyShootSpeed));
+		}
+
+		//positioned in the middle of the rect
+		text.setPosition(sf::Vector2f((width / 2 - textValue.getGlobalBounds().width / 2) - 32, i * height / howManyRows + height / howManyRows / (2 - textValue.getGlobalBounds().height / 2)));
+		_DebugWindow.draw(textValue);
+		textValue.setPosition(sf::Vector2f((width / 2 - textValue.getGlobalBounds().width / 2) - 32, i * height / howManyRows + height / howManyRows / (2 - textValue.getGlobalBounds().height / 2 + 32)));
+		_DebugWindow.draw(text);
+
+
+		//if rectplus is clicked with the mouse increment value
+		if (rectPlus.getGlobalBounds().contains(sf::Mouse::getPosition(_DebugWindow).x, sf::Mouse::getPosition(_DebugWindow).y))
+		{
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			{
+				if (i == 0)
+				{
+					_Character->m_CharSpeed += 0.5f;
+				}
+				if (i == 1)
+				{
+					_Board->m_Score += 1;
+				}
+				if (i == 2)
+				{
+					_Character->m_health += 1;
+				}
+				if (i == 3)
+				{
+					_Board->m_EnemyMoveSpeed += 1.0f;
+					//for each enemy set move speed
+					for (int i = 0; i < _Board->m_Enemies.size(); i++)
+					{
+						_Board->m_Enemies[i]->m_MoveSpeed = _Board->m_EnemyMoveSpeed;
+					}
+				}
+				if (i == 4)
+				{
+					_Board->m_EnemyShootSpeed += 1.0f;
+					//for each enemy set shoot speed
+					for (int i = 0; i < _Board->m_Enemies.size(); i++)
+					{
+						_Board->m_Enemies[i]->m_ShootSpeed = _Board->m_EnemyShootSpeed;
+					}
+				}
+
+			}
+		}
+
+		//if rectMinus is clicked with the mouse decrement value
+		if (rectMinus.getGlobalBounds().contains(sf::Mouse::getPosition(_DebugWindow).x, sf::Mouse::getPosition(_DebugWindow).y))
+		{
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			{
+				if (i == 0)
+				{
+					_Character->m_CharSpeed -= 0.5f;
+				}
+				if (i == 1)
+				{
+					_Board->m_Score -= 1;
+				}
+				if (i == 2)
+				{
+					_Character->m_health -= 1;
+				}
+				if (i == 3)
+				{
+					_Board->m_EnemyMoveSpeed -= 1.0f;
+					//for each enemy set move speed
+					for (int i = 0; i < _Board->m_Enemies.size(); i++)
+					{
+						_Board->m_Enemies[i]->m_MoveSpeed = _Board->m_EnemyMoveSpeed;
+					}
+				}
+				if (i == 4)
+				{
+					_Board->m_EnemyShootSpeed -= 1.0f;
+					//for each enemy set shoot speed
+					for (int i = 0; i < _Board->m_Enemies.size(); i++)
+					{
+						_Board->m_Enemies[i]->m_ShootSpeed = _Board->m_EnemyShootSpeed;
+					}
+				}
+			}
+		}
+
+
+
+
+
+
 	}
 }

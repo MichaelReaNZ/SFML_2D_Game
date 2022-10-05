@@ -39,6 +39,9 @@ public:
 	std::vector<Enemy*> m_Enemies;
 	std::vector<Item*> m_Items;
 
+	float m_EnemyMoveSpeed = 6.0f;
+	float m_EnemyShootSpeed = 6.0f;
+
 	sf::View* m_CurrentLevelView;
 	bool m_IsLevelComplete = false;
 	sf::Clock m_TimeSinceGameStart;

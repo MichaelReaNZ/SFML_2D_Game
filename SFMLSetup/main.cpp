@@ -9,13 +9,24 @@ int main()
 {
 	UiManager uiManager = UiManager();
 
+
+
 	//2 tile space for UI
 	sf::RenderWindow window(sf::VideoMode(1024, 1024 + 64 * 2), "Tile Based Project");
 	const int frameLimit = 60;
 	window.setFramerateLimit(frameLimit);
 
+	//debug window
+	bool debugWindowIsVisible = false;
+	sf::RenderWindow debugWindow(sf::VideoMode(window.getSize().x / 2, window.getSize().y), "Debug Window");
+	debugWindow.setPosition(sf::Vector2i(window.getPosition().x + window.getSize().x, window.getPosition().y));
+	debugWindow.setVisible(debugWindowIsVisible);
+
 	Board* mainBoard = new Board();
 	Character* mainCharacter = new Character(mainBoard->BoardPositionToScreenPosition(19, 19));
+
+
+
 
 	//adding UI area 64
 	//offset by half the tile size because of the tile center being the origin
@@ -52,8 +63,17 @@ int main()
 						uiManager.m_IsGameOver = false;
 					}
 				}
+				//esc key
+				if (event.key.code == sf::Keyboard::Escape) {
+					debugWindowIsVisible = !debugWindowIsVisible;
+					debugWindow.setVisible(debugWindowIsVisible);
+					uiManager.UpdateDebugWindow(debugWindow, mainCharacter, mainBoard);
+					debugWindow.display();
+				}
 			}
 		}
+
+
 
 		////end level animation
 		//if (mainBoard->m_IsLevelComplete) {
@@ -97,7 +117,16 @@ int main()
 
 			window.setView(gameView);
 			uiManager.Update(window, mainCharacter->m_health, mainCharacter->m_HasKey, mainBoard->m_Score, mainBoard->m_HighScore, mainBoard->m_TimeSinceGameStart);
+			if (debugWindowIsVisible) {
 
+				//only update when changing values
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+				{
+					//debugWindow.clear();
+					uiManager.UpdateDebugWindow(debugWindow, mainCharacter, mainBoard);
+					debugWindow.display();
+				}
+			}
 			window.display();
 		}
 

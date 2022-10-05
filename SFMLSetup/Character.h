@@ -16,8 +16,8 @@ private:
 	//can use this for direction
 	sf::Vector2i m_CharMoveVec = sf::Vector2i(0, 0);
 
-	float m_CharBaseSpeed = 6.0f;
-	float m_CharSpeed = m_CharBaseSpeed;
+	//float m_CharBaseSpeed = 6.0f;
+
 
 	sf::Texture* m_texture;
 	sf::Texture* m_AttackingTexture;
@@ -39,6 +39,7 @@ private:
 public:
 	sf::RectangleShape m_Shape;
 	sf::Vector2i m_CharacterBoardPosition;
+	float m_CharSpeed = 6.0f;
 
 	int m_health = 2;
 	bool m_HasKey = false;
@@ -61,7 +62,7 @@ public:
 
 	//void CharacterJump() { m_Shape.move(0, -0.2f); playerVelocityY = -5.0f; }
 
-	void modCharSpeed(float _valMod) { m_CharSpeed = _valMod * m_CharBaseSpeed; }
+	//void modCharSpeed(float _valMod) { m_CharSpeed = _valMod * m_CharBaseSpeed; }
 
 	bool IsCharacterInsideLevelView(sf::View* _LevelView);
 
