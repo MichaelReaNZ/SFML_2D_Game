@@ -96,7 +96,7 @@ int main()
 			mainCharacter->Update(window);
 
 			window.setView(gameView);
-			uiManager.Update(window, mainCharacter->m_health, mainCharacter->m_HasKey);
+			uiManager.Update(window, mainCharacter->m_health, mainCharacter->m_HasKey, mainBoard->m_Score, mainBoard->m_HighScore);
 
 			window.display();
 		}

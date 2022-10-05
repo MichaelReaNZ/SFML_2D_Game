@@ -18,6 +18,12 @@ Board::Board()
 	level4View = sf::View(sf::FloatRect(1024 - 32, 0 - 32 - (64 * 2), 1024, 1024 + (64 * 2)));
 
 	m_CurrentLevelView = &level1View;
+
+	//load high score from .txt file
+	std::ifstream highScoreFile;
+	highScoreFile.open("Assets/HighScore.txt");
+	highScoreFile >> m_HighScore;
+	highScoreFile.close();
 }
 
 Board::~Board()
@@ -205,6 +211,21 @@ void Board::TransitionLevel(sf::Vector2f _CharacterPosition) {
 	else if (IsPositionInsideView(&level4View, _CharacterPosition)) {
 		m_CurrentLevelView = &level4View;
 	}
+}
+
+void Board::IncrementScore()
+{
+	m_Score += rand() % 20 + 5;
+	//if score is larger than highscore then save
+	if (m_Score > m_HighScore) {
+		m_HighScore = m_Score;
+		//save to "Assets/HighScore.txt"
+		std::ofstream file;
+		file.open("Assets/HighScore.txt");
+		file << m_HighScore;
+		file.close();
+	}
+
 }
 
 int Board::GetEnemiesRemainingInLevel()

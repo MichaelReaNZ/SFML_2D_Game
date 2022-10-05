@@ -41,7 +41,10 @@ public:
 
 	sf::View* m_CurrentLevelView;
 	bool m_IsLevelComplete = false;
+	int m_Score;
+	int m_HighScore;
 
 	void TransitionLevel(sf::Vector2f _CharacterPosition);
 	int GetEnemiesRemainingInLevel();
+	void IncrementScore();
 };

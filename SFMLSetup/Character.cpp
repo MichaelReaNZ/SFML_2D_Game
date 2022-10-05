@@ -225,6 +225,11 @@ void Character::Attack(Board* _Gameboard) {
 					delete _Gameboard->m_Enemies[i];
 					_Gameboard->m_Enemies.erase(_Gameboard->m_Enemies.begin() + i);
 					totalGameNumberOfEnemiesRemain--;
+					_Gameboard->IncrementScore();
+
+
+
+
 
 					//TODO:play enemy dead sound
 

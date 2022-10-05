@@ -9,7 +9,7 @@ UiManager::~UiManager()
 {
 }
 
-void UiManager::Update(sf::RenderWindow& _Window, int _CharacterHealth, bool _HasKey)
+void UiManager::Update(sf::RenderWindow& _Window, int _CharacterHealth, bool _HasKey, int _Score, int _HighScore)
 {
 	sf::View view = _Window.getView();
 
@@ -77,4 +77,25 @@ void UiManager::Update(sf::RenderWindow& _Window, int _CharacterHealth, bool _Ha
 			delete keyTexture;
 		}
 	}
+
+	//draw score
+	sf::Font font;
+	font.loadFromFile("Assets/font.ttf");
+	sf::Text scoreText;
+	scoreText.setFont(font);
+	scoreText.setString("Score: " + std::to_string(_Score));
+	scoreText.setCharacterSize(24);
+	scoreText.setFillColor(sf::Color::White);
+	scoreText.setPosition(sf::Vector2f((hudAreaBox.getGlobalBounds().left / 2) + 64 * 3, (hudAreaBox.getPosition().y + hudAreaBox.getGlobalBounds().height / 2) - 32));
+	_Window.draw(scoreText);
+
+
+	sf::Text highScoreText;
+	highScoreText.setFont(font);
+	highScoreText.setString("High Score: " + std::to_string(_HighScore));
+	highScoreText.setCharacterSize(24);
+	highScoreText.setFillColor(sf::Color::White);
+	highScoreText.setPosition(sf::Vector2f((hudAreaBox.getGlobalBounds().left / 2) + 64 * 3, (hudAreaBox.getPosition().y + hudAreaBox.getGlobalBounds().height / 2) + 16));
+	_Window.draw(highScoreText);
+
 }

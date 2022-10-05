@@ -11,6 +11,6 @@ public:
 
 	//bool m_IsNewGame = true;
 
-	void Update(sf::RenderWindow& _Window, int _CharacterHealth, bool _HasKey);
+	void Update(sf::RenderWindow& _Window, int _CharacterHealth, bool _HasKey, int _Score, int _HighScore);
 };
 
