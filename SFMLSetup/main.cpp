@@ -48,7 +48,7 @@ int main()
 						delete mainCharacter;
 						delete mainBoard;
 						mainBoard = new Board();
-						mainCharacter = new Character(mainBoard->BoardPositionToScreenPosition(2, 2));
+						mainCharacter = new Character(mainBoard->BoardPositionToScreenPosition(19, 19));
 						uiManager.m_IsGameOver = false;
 					}
 				}
@@ -96,7 +96,7 @@ int main()
 			mainCharacter->Update(window);
 
 			window.setView(gameView);
-			uiManager.Update(window, mainCharacter->m_health, mainCharacter->m_HasKey, mainBoard->m_Score, mainBoard->m_HighScore);
+			uiManager.Update(window, mainCharacter->m_health, mainCharacter->m_HasKey, mainBoard->m_Score, mainBoard->m_HighScore, mainBoard->m_TimeSinceGameStart);
 
 			window.display();
 		}

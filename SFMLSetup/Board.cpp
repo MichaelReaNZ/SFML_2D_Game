@@ -24,6 +24,8 @@ Board::Board()
 	highScoreFile.open("Assets/HighScore.txt");
 	highScoreFile >> m_HighScore;
 	highScoreFile.close();
+
+	m_TimeSinceGameStart.restart();
 }
 
 Board::~Board()

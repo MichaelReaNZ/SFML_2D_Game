@@ -9,7 +9,7 @@ UiManager::~UiManager()
 {
 }
 
-void UiManager::Update(sf::RenderWindow& _Window, int _CharacterHealth, bool _HasKey, int _Score, int _HighScore)
+void UiManager::Update(sf::RenderWindow& _Window, int _CharacterHealth, bool _HasKey, int _Score, int _HighScore, sf::Clock _RunningTime)
 {
 	sf::View view = _Window.getView();
 
@@ -84,18 +84,35 @@ void UiManager::Update(sf::RenderWindow& _Window, int _CharacterHealth, bool _Ha
 	sf::Text scoreText;
 	scoreText.setFont(font);
 	scoreText.setString("Score: " + std::to_string(_Score));
-	scoreText.setCharacterSize(24);
+	scoreText.setCharacterSize(80);
 	scoreText.setFillColor(sf::Color::White);
-	scoreText.setPosition(sf::Vector2f((hudAreaBox.getGlobalBounds().left / 2) + 64 * 3, (hudAreaBox.getPosition().y + hudAreaBox.getGlobalBounds().height / 2) - 32));
+	scoreText.setPosition(sf::Vector2f((hudAreaBox.getGlobalBounds().left / 2) + 64 * 3, (hudAreaBox.getPosition().y + hudAreaBox.getGlobalBounds().height / 2) - 64 - 32));
 	_Window.draw(scoreText);
 
 
 	sf::Text highScoreText;
 	highScoreText.setFont(font);
 	highScoreText.setString("High Score: " + std::to_string(_HighScore));
-	highScoreText.setCharacterSize(24);
+	highScoreText.setCharacterSize(80);
 	highScoreText.setFillColor(sf::Color::White);
-	highScoreText.setPosition(sf::Vector2f((hudAreaBox.getGlobalBounds().left / 2) + 64 * 3, (hudAreaBox.getPosition().y + hudAreaBox.getGlobalBounds().height / 2) + 16));
+	highScoreText.setPosition(sf::Vector2f((hudAreaBox.getGlobalBounds().left / 2) + 64 * 3, (hudAreaBox.getPosition().y + hudAreaBox.getGlobalBounds().height / 2) - 32));
 	_Window.draw(highScoreText);
 
+	if (_RunningTime.getElapsedTime().asSeconds() < 15) {
+		//down the very bottom tell the user to move with WASD keys
+		sf::Text moveText;
+		moveText.setFont(font);
+		moveText.setString("Move with - WASD keys");
+		moveText.setCharacterSize(84);
+		moveText.setFillColor(sf::Color::White);
+		moveText.setPosition(sf::Vector2f(hudAreaBox.getGlobalBounds().left + 64, view.getViewport().top + 1024 - 32 - 64 * 4));
+		_Window.draw(moveText);
+
+		moveText.setFont(font);
+		moveText.setString("Attack with - Spacebar");
+		moveText.setCharacterSize(84);
+		moveText.setFillColor(sf::Color::White);
+		moveText.setPosition(sf::Vector2f(hudAreaBox.getGlobalBounds().left + 64, view.getViewport().top + 1024 - 64 * 3));
+		_Window.draw(moveText);
+	}
 }
