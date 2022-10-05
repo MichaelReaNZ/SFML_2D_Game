@@ -1,18 +1,23 @@
-
+#pragma once
 #include "Board.h"
+#include "Collisions.h"
 
 Board::Board()
 {
 	PreLoadTextureAssetsFromFiles();
 	LoadMapFromFile("Assets/PixelMap.png");
-	//LoadMapFromFile("Assets/Map.txt");
 
-	//create and place enemies
-	Enemy* mainEnemy = new Enemy(BoardPositionToScreenPosition(11, 4));
-	m_Enemies.push_back(mainEnemy);
+	//Define Levels
+	//level 1 is in bottom right corner
+	level1View = sf::View(sf::FloatRect(1024 - 32, 1024 - (64 * 2) - 32, 1024, 1024 + (64 * 2)));
+	//level 2 is in bottom left corner
+	level2View = sf::View(sf::FloatRect(0 - 32, 1024 - (64 * 2) - 32, 1024, 1024 + (64 * 2)));
+	//level 3 is in top left corner
+	level3View = sf::View(sf::FloatRect(0 - 32, 0 - 32 - (64 * 2), 1024, 1024 + (64 * 2)));
+	//level 4 is in top right corner
+	level4View = sf::View(sf::FloatRect(1024 - 32, 0 - 32 - (64 * 2), 1024, 1024 + (64 * 2)));
 
-	//create and place door
-	m_Items.push_back(new Item(BoardPositionToScreenPosition(0, 1), DOOR));
+	m_CurrentLevelView = &level1View;
 }
 
 Board::~Board()
@@ -52,36 +57,34 @@ void Board::PreLoadTextureAssetsFromFiles() {
 	m_tileTextureArray[TileType_Sea]->loadFromFile("Assets/Sea.png");
 }
 
-void Board::Update(sf::RenderWindow& _Window, sf::View _LevelView)
+void Board::Update(sf::RenderWindow& _Window, sf::View* _LevelView)
 {
-	//sf::View view = _Window.getView();
+	sf::Vector2f viewCentre(_LevelView->getCenter());
+	sf::Vector2f viewSize(_LevelView->getSize());
 
 	//draw board tiles
 	for (int x = 0; x < BOARD_WIDTH; x++)
 	{
 		for (int y = 0; y < BOARD_HEIGHT; y++)
 		{
-			//only if tile within current view then update (to save CPU)
-			if (m_tilePtrArray[x][y]->m_TileSprite.getPosition().x > (_LevelView.getCenter().x - _LevelView.getSize().x / 2) - 64
-				&& m_tilePtrArray[x][y]->m_TileSprite.getPosition().x < (_LevelView.getCenter().x + _LevelView.getSize().x / 2) + 64
-				&& m_tilePtrArray[x][y]->m_TileSprite.getPosition().y >(_LevelView.getCenter().y - _LevelView.getSize().y / 2) - 64
-				&& m_tilePtrArray[x][y]->m_TileSprite.getPosition().y < (_LevelView.getCenter().y + _LevelView.getSize().y / 2) + 64)
-			{
-				_Window.draw(m_tilePtrArray[x][y]->m_TileSprite);
+			if (IsPositionInsideView(_LevelView, m_tilePtrArray[x][y]->m_TileSprite.getPosition())) {
+				m_tilePtrArray[x][y]->Update(_Window);
 			}
 		}
-		//m_tilePtrArray[x][y]->Update(_Window);
-
 	}
 
 	//draw items
 	for (int i = 0; i < m_Items.size(); i++) {
-		m_Items[i]->Update(_Window);
+		if (IsPositionInsideView(_LevelView, m_Items[i]->m_Shape.getPosition())) {
+			m_Items[i]->Update(_Window);
+		}
 	}
 
 	//draw enemies
 	for (int i = 0; i < m_Enemies.size(); i++) {
-		m_Enemies[i]->Update(_Window);
+		if (IsPositionInsideView(_LevelView, m_Enemies[i]->m_Shape.getPosition())) {
+			m_Enemies[i]->Update(_Window);
+		}
 	}
 }
 
@@ -138,6 +141,9 @@ void Board::LoadMapFromFile(std::string _FilePath) {
 	{
 		for (int y = 0; y < imageSize.y; y += scale)
 		{
+			int yScale = y / scale;
+			int xScale = x / scale;
+
 			sf::Color color = pixelMapImage.getPixel(x, y);
 			sf::Uint8 r = color.r;
 			sf::Uint8 g = color.g;
@@ -145,7 +151,6 @@ void Board::LoadMapFromFile(std::string _FilePath) {
 
 			TileType tileType = TileType_Sea;
 
-			//brown is mountain
 			if (r == 58 && g == 29 && b == 0) {
 				tileType = TileType_Wall;
 
@@ -156,9 +161,17 @@ void Board::LoadMapFromFile(std::string _FilePath) {
 			else if (r == 0 && g == 128 && b == 0) {
 				tileType = TileType_Floor;
 			}
-
-			int yScale = y / scale;
-			int xScale = x / scale;
+			else if (r == 255 && g == 0 && b == 0) {
+				//Enemy
+				tileType = TileType_Floor;
+				Enemy* enemy = new Enemy(sf::Vector2f(xScale * 64, yScale * 64));
+				m_Enemies.push_back(enemy);
+			}
+			else if (r == 255 && g == 255 && b == 255) {
+				//Door
+				tileType = TileType_Floor;
+				m_Items.push_back(new Item(sf::Vector2f(xScale * 64, yScale * 64), DOOR));
+			}
 
 			m_tilePtrArray[yScale][xScale] = new Tile(sf::Vector2f(xScale * 64, yScale * 64), tileType, m_tileTextureArray[tileType]);
 			m_tilePtrArray[yScale][xScale]->m_TilePosition = sf::Vector2i(xScale, yScale);
@@ -166,79 +179,43 @@ void Board::LoadMapFromFile(std::string _FilePath) {
 			//Collision boxes
 			if (tileType == TileType_Sea || tileType == TileType_Wall) {
 				m_tilePtrArray[yScale][xScale]->m_AABB = new sf::FloatRect();
-
 				m_tilePtrArray[yScale][xScale]->m_AABB->top = m_tilePtrArray[yScale][xScale]->getSprite().getGlobalBounds().top;
 				m_tilePtrArray[yScale][xScale]->m_AABB->left = m_tilePtrArray[yScale][xScale]->getSprite().getGlobalBounds().left;
 				m_tilePtrArray[yScale][xScale]->m_AABB->height = m_tilePtrArray[yScale][xScale]->getSprite().getGlobalBounds().height;
 				m_tilePtrArray[yScale][xScale]->m_AABB->width = m_tilePtrArray[yScale][xScale]->getSprite().getGlobalBounds().width;
 
-				//m_levelWallTiles.push_back(m_tilePtrArray[y][x]);
 				m_WorldCollisionRects.push_back(m_tilePtrArray[yScale][xScale]->m_AABB);
 			}
 		}
 	}
 }
 
+void Board::TransitionLevel(sf::Vector2f _CharacterPosition) {
+	//change to level if player is inside of that view
+	if (IsPositionInsideView(&level1View, _CharacterPosition)) {
+		m_CurrentLevelView = &level1View;
+	}
+	else if (IsPositionInsideView(&level3View, _CharacterPosition)) {
+		m_CurrentLevelView = &level3View;
+	}
+	else if (IsPositionInsideView(&level2View, _CharacterPosition)) {
+		m_CurrentLevelView = &level2View;
+	}
 
+	else if (IsPositionInsideView(&level4View, _CharacterPosition)) {
+		m_CurrentLevelView = &level4View;
+	}
+}
 
+int Board::GetEnemiesRemainingInLevel()
+{
+	int _EnemiesRemainingInLevel = 0;
+	//for each enemy if it's inside the view increment m_EnemiesRemainingInLevel
+	for (int i = 0; i < m_Enemies.size(); i++) {
+		if (IsPositionInsideView(m_CurrentLevelView, m_Enemies[i]->m_Shape.getPosition())) {
+			_EnemiesRemainingInLevel++;
+		}
+	}
 
-//create array of pixels
-//sf::Uint8* pixels = new sf::Uint8[imageSize.x * imageSize.y * 4];
-
-
-
-
-	//std::fstream loadFileStream;
-	//loadFileStream.open(_FilePath, std::ios::in);
-
-	//std::string loadFileString;
-	//int lineCount = 0;
-
-	//if (loadFileStream.is_open()) {
-	//	while (std::getline(loadFileStream, loadFileString)) {
-	//		for (int i = 0; i < loadFileString.size(); i++) {
-	//			m_levelArray[lineCount][i] = loadFileString[i];
-	//		}
-	//		lineCount++;
-	//	}
-	//	loadFileStream.close();
-	//}
-
-	//for (int x = 0; x < BOARD_HEIGHT; x++)
-	//{
-	//	for (int y = 0; y < BOARD_WIDTH; y++)
-	//	{
-	//		if (m_levelArray[y][x] == 'x') {
-	//			m_tilePtrArray[y][x] = new Tile(sf::Vector2f(x * 64, y * 64), TileType_Wall, m_tileTextureArray[TileType_Wall]);
-	//			m_tilePtrArray[y][x]->m_TilePosition = sf::Vector2i(x, y);
-	//		}
-	//		else if (m_levelArray[y][x] == 'o') {
-	//			m_tilePtrArray[y][x] = new Tile(sf::Vector2f(x * 64, y * 64), TileType_Floor, m_tileTextureArray[TileType_Floor]);
-	//			m_tilePtrArray[y][x]->m_TilePosition = sf::Vector2i(x, y);
-	//		}
-	//		else if (m_levelArray[y][x] == 's') {
-	//			m_tilePtrArray[y][x] = new Tile(sf::Vector2f(x * 64, y * 64), TileType_Sea, m_tileTextureArray[TileType_Sea]);
-	//			m_tilePtrArray[y][x]->m_TilePosition = sf::Vector2i(x, y);
-	//		}
-
-	//		//Collision boxes
-	//		if (m_levelArray[y][x] == 's' || m_levelArray[y][x] == 'x') {
-	//			m_tilePtrArray[y][x]->m_AABB = new sf::FloatRect();
-
-	//			m_tilePtrArray[y][x]->m_AABB->top = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().top;
-	//			m_tilePtrArray[y][x]->m_AABB->left = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().left;
-	//			m_tilePtrArray[y][x]->m_AABB->height = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().height;
-	//			m_tilePtrArray[y][x]->m_AABB->width = m_tilePtrArray[y][x]->getSprite().getGlobalBounds().width;
-
-	//			//m_levelWallTiles.push_back(m_tilePtrArray[y][x]);
-	//			m_WorldCollisionRects.push_back(m_tilePtrArray[y][x]->m_AABB);
-	//		}
-	//	}
-	//}
-//}
-
-//Will span underneath enemy when it is killed
-void Board::SpawnKey() {
-	sf::Vector2f lastEnemyLocation = m_Enemies.front()->m_Shape.getPosition();
-	m_Items.push_back(new Item(lastEnemyLocation, KEY));
+	return _EnemiesRemainingInLevel;
 }

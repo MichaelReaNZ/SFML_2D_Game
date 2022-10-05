@@ -20,7 +20,7 @@ private:
 
 
 public:
-	sf::Sprite m_TileSprite;
+	sf::Sprite m_TileSprite; //TODO: Should I use a pointer?
 	sf::Vector2i m_TilePosition;
 	sf::FloatRect* m_AABB; //the bounding volume
 

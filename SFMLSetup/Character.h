@@ -41,9 +41,9 @@ public:
 	sf::Vector2i m_CharacterBoardPosition;
 
 	int m_health = 2;
-	bool m_HasKey = true;
+	bool m_HasKey = false;
 
-	//bool colliding = false;
+	bool m_IsTransitioningLevels = false;
 	//float playerVelocityY = 0.0f;
 
 	//sf::RectangleShape* CharGetShape() { return m_Shape; }

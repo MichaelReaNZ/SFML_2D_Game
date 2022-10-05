@@ -8,15 +8,16 @@
 class Board {
 	static const int BOARD_WIDTH = 16 * 2;
 	static const int BOARD_HEIGHT = 16 * 2;
-
 	static const int TILE_SIZE_IN_PIXELS = 64;
 
-
-
-	//std::vector<Tile*> m_levelWallTiles;
-
-
-
+	//level 1 is in bottom right corner
+	sf::View level1View;
+	//level 2 is in bottom left corner
+	sf::View level2View;
+	//level 3 is in top left corner
+	sf::View level3View;
+	//level 4 is in top right corner
+	sf::View level4View;
 
 	//tile textures
 	sf::Texture* m_tileTextureArray[3];
@@ -24,7 +25,7 @@ class Board {
 public:
 	Board();
 	~Board();
-	void Update(sf::RenderWindow& _Window, sf::View _LevelView);
+	void Update(sf::RenderWindow& _Window, sf::View* _LevelView);
 	void LoadMapFromFile(std::string _FilePath);
 
 	bool CanMoveToTile(sf::Vector2i _TilePosition);
@@ -32,12 +33,15 @@ public:
 
 	Tile* m_tilePtrArray[BOARD_WIDTH][BOARD_HEIGHT];
 	char m_levelArray[BOARD_WIDTH][BOARD_HEIGHT];
+
 	std::vector<sf::FloatRect*> m_WorldCollisionRects;
+
 	std::vector<Enemy*> m_Enemies;
 	std::vector<Item*> m_Items;
 
+	sf::View* m_CurrentLevelView;
 	bool m_IsLevelComplete = false;
 
-	void SpawnKey();
-
+	void TransitionLevel(sf::Vector2f _CharacterPosition);
+	int GetEnemiesRemainingInLevel();
 };

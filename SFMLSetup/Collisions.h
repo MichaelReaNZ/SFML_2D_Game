@@ -61,3 +61,17 @@ public:
 	//}
 
 };
+
+//is position inside of levelView
+static bool IsPositionInsideView(sf::View* _LevelView, sf::Vector2f _Position) {
+	sf::Vector2f viewCenter = _LevelView->getCenter();
+	sf::Vector2f viewSize = _LevelView->getSize();
+
+	if (_Position.x > (viewCenter.x - viewSize.x / 2)
+		&& _Position.x < (viewCenter.x + viewSize.x / 2)
+		&& _Position.y >(viewCenter.y - viewSize.y / 2)
+		&& _Position.y < (viewCenter.y + viewSize.y / 2)) {
+		return true;
+	}
+	else { return false; }
+}

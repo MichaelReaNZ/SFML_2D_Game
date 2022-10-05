@@ -47,25 +47,21 @@ void Character::CharacterInput(Board* _Gameboard) {
 	{
 		m_CharMoveVec.x += 1;
 	}
-
 	//left
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
 		m_CharMoveVec.x += -1;
 	}
-
 	//up
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
 		m_CharMoveVec.y += -1;
 	}
-
 	//down
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 	{
 		m_CharMoveVec.y += 1;
 	}
-
 
 	Move(1.0f, _Gameboard->m_WorldCollisionRects);
 	Attack(_Gameboard);
@@ -109,7 +105,6 @@ void Character::Move(float _dt, std::vector<sf::FloatRect*> Collisions)
 
 		//also move the character sprite
 		m_CharacterSprite.setPosition(m_Shape.getPosition());
-
 	}
 }
 
@@ -138,11 +133,6 @@ void Character::MoveToTile(sf::Vector2i _BoardOffset, Board* _Gameboard)
 
 	std::cout << "Character Board Position: x:" << m_CharacterBoardPosition.x << ", " << "y:" << m_CharacterBoardPosition.y << std::endl;
 }
-
-//Bullet Character::Shoot()
-//{
-//	return Bullet(m_Shape.getPosition(), m_direction);
-//}
 
 void Character::ReceiveDamageCollisions(Board* _Gameboard) {
 
@@ -186,22 +176,22 @@ void Character::ItemCollisions(Board* _Gameboard) {
 				if (m_HasKey) {
 					std::cout << "Colliding with door." << std::endl;
 					//TODO:Unlock door sound
+					m_IsTransitioningLevels = true;
 
 					//if character is the left of the door
 					if (m_Shape.getPosition().x < _Gameboard->m_Items[i]->m_Shape.getPosition().x) {
 
 						std::cout << "Have passed through door." << std::endl;
-						//TODO:Move to next level
-						_Gameboard->m_IsLevelComplete = true;
+						m_HasKey = false;
+
+						//remove door
+						_Gameboard->m_Items.erase(_Gameboard->m_Items.begin() + i);
 					}
 				}
 				else {
 					Collisions::ResolveXCollisions(&m_Shape, new sf::FloatRect(_Gameboard->m_Items[i]->m_Shape.getGlobalBounds().left, _Gameboard->m_Items[i]->m_Shape.getGlobalBounds().top, _Gameboard->m_Items[i]->m_Shape.getGlobalBounds().width, _Gameboard->m_Items[i]->m_Shape.getGlobalBounds().height));
 					std::cout << "Colliding with door but it's locked." << std::endl;
 				}
-
-
-				//take player to next level
 			}
 		}
 	}
@@ -215,32 +205,34 @@ void Character::Attack(Board* _Gameboard) {
 		//move the weapon bounding box next to the character if attacking
 		m_WeaponBoundingBox.setPosition(sf::Vector2f(m_Shape.getPosition().x + m_Shape.getGlobalBounds().width, m_Shape.getPosition().y));
 
-		int numberOfEnemiesRemain = _Gameboard->m_Enemies.size();
+		int totalGameNumberOfEnemiesRemain = _Gameboard->m_Enemies.size();
+
 		//check if the weapon bounding box is colliding with an enemy
-		for (int i = 0; i < numberOfEnemiesRemain; i++)
+		for (int i = 0; i < totalGameNumberOfEnemiesRemain; i++)
 		{
-			//enemy death
-			if (m_WeaponBoundingBox.getGlobalBounds().intersects(_Gameboard->m_Enemies[i]->m_Shape.getGlobalBounds()))
-			{
-				if (numberOfEnemiesRemain == 1) {
-					//key 
-					_Gameboard->SpawnKey();
+			sf::Vector2f enemyPosition = _Gameboard->m_Enemies[i]->m_Shape.getPosition();
+
+			//enemys that are within the level
+			if (IsPositionInsideView(_Gameboard->m_CurrentLevelView, enemyPosition)) {
+				if (m_WeaponBoundingBox.getGlobalBounds().intersects(_Gameboard->m_Enemies[i]->m_Shape.getGlobalBounds()))
+				{
+					if (_Gameboard->GetEnemiesRemainingInLevel() == 1) {
+						//Will span underneath enemy when it is killed
+						_Gameboard->m_Items.push_back(new Item(enemyPosition, KEY));
+					}
+
+					std::cout << "Weapon is Colliding with enemy." << std::endl;
+					delete _Gameboard->m_Enemies[i];
+					_Gameboard->m_Enemies.erase(_Gameboard->m_Enemies.begin() + i);
+					totalGameNumberOfEnemiesRemain--;
+
+					//TODO:play enemy dead sound
+
+					std::cout << "Enemy killed" << std::endl;
+					//if that was the last enemy then drop the key in it's position.
 				}
-
-				std::cout << "Weapon is Colliding with enemy." << std::endl;
-
-				//remove enemy from enemy array
-				delete _Gameboard->m_Enemies[i];
-				_Gameboard->m_Enemies.erase(_Gameboard->m_Enemies.begin() + i);
-
-				//play enemy dead sound
-
-				std::cout << "Enemy killed" << std::endl;
-				//if that was the last enemy then drop the key in it's position.
-
 			}
 		}
-
 	}
 	else {
 		m_CharacterSprite.setTexture(*m_texture, true);
@@ -252,15 +244,5 @@ void Character::Attack(Board* _Gameboard) {
 //is character inside of levelView
 bool Character::IsCharacterInsideLevelView(sf::View* _LevelView) {
 	sf::Vector2f characterPosition = m_Shape.getPosition();
-	sf::Vector2f viewCenter = _LevelView->getCenter();
-	sf::Vector2f viewSize = _LevelView->getSize();
-
-
-	if (characterPosition.x > (viewCenter.x - viewSize.x / 2)
-		&& characterPosition.x < (viewCenter.x + viewSize.x / 2)
-		&& characterPosition.y >(viewCenter.y - viewSize.y / 2)
-		&& characterPosition.y < (viewCenter.y + viewSize.y / 2)) {
-		return true;
-	}
-	else { return false; }
+	return IsPositionInsideView(_LevelView, characterPosition);
 }
