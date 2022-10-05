@@ -248,3 +248,19 @@ void Character::Attack(Board* _Gameboard) {
 		m_WeaponBoundingBox.setPosition(sf::Vector2f(m_Shape.getPosition().x, m_Shape.getPosition().y));
 	}
 }
+
+//is character inside of levelView
+bool Character::IsCharacterInsideLevelView(sf::View* _LevelView) {
+	sf::Vector2f characterPosition = m_Shape.getPosition();
+	sf::Vector2f viewCenter = _LevelView->getCenter();
+	sf::Vector2f viewSize = _LevelView->getSize();
+
+
+	if (characterPosition.x > (viewCenter.x - viewSize.x / 2)
+		&& characterPosition.x < (viewCenter.x + viewSize.x / 2)
+		&& characterPosition.y >(viewCenter.y - viewSize.y / 2)
+		&& characterPosition.y < (viewCenter.y + viewSize.y / 2)) {
+		return true;
+	}
+	else { return false; }
+}

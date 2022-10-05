@@ -52,15 +52,26 @@ void Board::PreLoadTextureAssetsFromFiles() {
 	m_tileTextureArray[TileType_Sea]->loadFromFile("Assets/Sea.png");
 }
 
-void Board::Update(sf::RenderWindow& _Window)
+void Board::Update(sf::RenderWindow& _Window, sf::View _LevelView)
 {
+	//sf::View view = _Window.getView();
+
 	//draw board tiles
 	for (int x = 0; x < BOARD_WIDTH; x++)
 	{
 		for (int y = 0; y < BOARD_HEIGHT; y++)
 		{
-			m_tilePtrArray[x][y]->Update(_Window);
+			//only if tile within current view then update (to save CPU)
+			if (m_tilePtrArray[x][y]->m_TileSprite.getPosition().x > (_LevelView.getCenter().x - _LevelView.getSize().x / 2) - 64
+				&& m_tilePtrArray[x][y]->m_TileSprite.getPosition().x < (_LevelView.getCenter().x + _LevelView.getSize().x / 2) + 64
+				&& m_tilePtrArray[x][y]->m_TileSprite.getPosition().y >(_LevelView.getCenter().y - _LevelView.getSize().y / 2) - 64
+				&& m_tilePtrArray[x][y]->m_TileSprite.getPosition().y < (_LevelView.getCenter().y + _LevelView.getSize().y / 2) + 64)
+			{
+				_Window.draw(m_tilePtrArray[x][y]->m_TileSprite);
+			}
 		}
+		//m_tilePtrArray[x][y]->Update(_Window);
+
 	}
 
 	//draw items

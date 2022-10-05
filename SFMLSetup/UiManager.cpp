@@ -11,10 +11,19 @@ UiManager::~UiManager()
 
 void UiManager::Update(sf::RenderWindow& _Window, int _CharacterHealth, bool _HasKey)
 {
+	sf::View view = _Window.getView();
+
 	//draw a blue box the size of the view
 	sf::RectangleShape hudAreaBox;
-	hudAreaBox.setSize(sf::Vector2f(1024, 64 * 2));
-	hudAreaBox.setPosition(sf::Vector2f(-32, -32 - 64 * 2));
+	//hudAreaBox.setSize(sf::Vector2f(1024, 64 * 2));
+	hudAreaBox.setSize(sf::Vector2f(view.getSize().x, 64 * 2));
+
+	//draw in same place no matter where the view is
+
+
+	//hudAreaBox.setPosition(sf::Vector2f(view.getViewport().left * _Window.getSize().x, view.getViewport().top * _Window.getSize().y));
+	//hudAreaBox.setPosition(sf::Vector2f((view.getCenter().x - view.getSize().x / 2) - 32, (view.getCenter().y - view.getSize().y / 2) - 32 - 64 * 2));
+	hudAreaBox.setPosition(sf::Vector2f(view.getViewport().left - 32, view.getViewport().top - 32 - 64 * 2));
 	hudAreaBox.setFillColor(sf::Color::Blue);
 
 	//death screen
@@ -68,7 +77,4 @@ void UiManager::Update(sf::RenderWindow& _Window, int _CharacterHealth, bool _Ha
 			delete keyTexture;
 		}
 	}
-
-
-
 }

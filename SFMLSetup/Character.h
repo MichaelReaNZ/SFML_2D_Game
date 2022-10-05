@@ -41,7 +41,7 @@ public:
 	sf::Vector2i m_CharacterBoardPosition;
 
 	int m_health = 2;
-	bool m_HasKey = false;
+	bool m_HasKey = true;
 
 	//bool colliding = false;
 	//float playerVelocityY = 0.0f;
@@ -62,6 +62,8 @@ public:
 	//void CharacterJump() { m_Shape.move(0, -0.2f); playerVelocityY = -5.0f; }
 
 	void modCharSpeed(float _valMod) { m_CharSpeed = _valMod * m_CharBaseSpeed; }
+
+	bool IsCharacterInsideLevelView(sf::View* _LevelView);
 
 	//Bullet Shoot();
 };

@@ -24,7 +24,7 @@ class Board {
 public:
 	Board();
 	~Board();
-	void Update(sf::RenderWindow& _Window);
+	void Update(sf::RenderWindow& _Window, sf::View _LevelView);
 	void LoadMapFromFile(std::string _FilePath);
 
 	bool CanMoveToTile(sf::Vector2i _TilePosition);
