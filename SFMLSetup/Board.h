@@ -40,6 +40,7 @@ public:
 
 	std::vector<Enemy*> m_Enemies;
 	std::vector<Item*> m_Items;
+	std::vector<Bullet*> m_Bullets;
 
 	float m_EnemyMoveSpeed = 6.0f;
 	float m_EnemyShootSpeed = 6.0f;
@@ -56,4 +57,5 @@ public:
 	void IncrementScore();
 
 	void EnemyMovement();
+	void EnemyAttack(sf::Vector2f _CharacterPosition);
 };

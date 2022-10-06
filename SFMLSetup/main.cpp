@@ -76,26 +76,26 @@ int main()
 
 
 
-		////end level animation
-		//if (mainBoard->m_IsLevelComplete) {
-		//	//if there are some rows left to black out
-		//	if (deletingRowIndex >= 0) {
+		//end level animation
+		if (mainBoard->m_IsGameComplete) {
+			//if there are some rows left to black out
+			if (deletingRowIndex >= 0) {
 
-		//		//if there are some cols in that row to black out
+				//if there are some cols in that row to black out
 
-		//		if (deletingColIndex >= 0) {
-		//			mainBoard->m_tilePtrArray[deletingRowIndex][deletingColIndex]->m_TileSprite.setScale(0, 0);
-		//			tilesBlackedOut++;
-		//			deletingColIndex--;
-		//		}
-		//		else {
-		//			//if there are no more cols in that row to black out go to next (prev) row
-		//			deletingRowIndex--;
-		//			//reset col index;
-		//			deletingColIndex = n_rows - 1;
-		//		}
-		//	}
-		//}
+				if (deletingColIndex >= 0) {
+					mainBoard->m_tilePtrArray[deletingRowIndex][deletingColIndex]->m_TileSprite.setScale(0, 0);
+					tilesBlackedOut++;
+					deletingColIndex--;
+				}
+				else {
+					//if there are no more cols in that row to black out go to next (prev) row
+					deletingRowIndex--;
+					//reset col index;
+					deletingColIndex = n_rows - 1;
+				}
+			}
+		}
 
 		if (!uiManager.m_IsGameOver) {
 			physicsSystem.PhysicsUpdate();
@@ -103,6 +103,7 @@ int main()
 
 			mainCharacter->CharacterInput(mainBoard);
 			mainBoard->EnemyMovement();
+			mainBoard->EnemyAttack(mainCharacter->m_Shape.getPosition());
 
 			//sf::Vector2f charPos = mainCharacter->m_Shape.getPosition();
 

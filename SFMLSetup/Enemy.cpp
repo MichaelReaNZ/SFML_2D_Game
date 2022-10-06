@@ -13,6 +13,9 @@ Enemy::Enemy(sf::Vector2f _Position)
 
 	m_WalkingTimeClock.restart();
 	ChangeDirectionRandomly();
+
+	//random number between 2 and 5
+	m_ShootFrequency = rand() % 3 + 2;
 }
 
 Enemy::~Enemy()
@@ -47,4 +50,21 @@ void Enemy::ChangeDirectionRandomly() {
 	}
 }
 
+Bullet* Enemy::ShootBullet(sf::Vector2f _EnemyPosition, sf::Vector2f _CharacterPosition) {
+	sf::Vector2i moveVector = sf::Vector2i(0, 0);
+
+	//calculate the unit vector
+	float x = _CharacterPosition.x - _EnemyPosition.x;
+	float y = _CharacterPosition.y - _EnemyPosition.y;
+	float length = sqrt(x * x + y * y);
+	x = x / length;
+	y = y / length;
+
+	//calculate the move vector
+	moveVector.x = x * m_ShootSpeed;
+	moveVector.y = y * m_ShootSpeed;
+
+	//create the bullet
+	return new Bullet(_EnemyPosition, moveVector);
+}
 

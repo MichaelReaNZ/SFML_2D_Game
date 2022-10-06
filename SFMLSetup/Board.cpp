@@ -94,6 +94,16 @@ void Board::Update(sf::RenderWindow& _Window, sf::View* _LevelView)
 			m_Enemies[i]->Update(_Window);
 		}
 	}
+
+	//Draw bullets
+	for (int i = 0; i < m_Bullets.size(); i++) {
+		//if (IsPositionInsideView(_LevelView, m_Bullets[i]->m_Shape.getPosition())) {
+		m_Bullets[i]->Update(_Window);
+		//}
+	}
+
+
+
 	if (enemiesRemaining == 0) {
 		m_IsGameComplete = true;
 	}
@@ -295,4 +305,35 @@ void Board::EnemyMovement() {
 
 
 	}
+}
+
+//Shoot bullets at player position
+void Board::EnemyAttack(sf::Vector2f _CharacterPosition) {
+	//for each enemy
+	for (int enemyIndex = 0; enemyIndex < m_Enemies.size(); enemyIndex++) {
+		//if enemy is inside the view
+		if (IsPositionInsideView(m_CurrentLevelView, m_Enemies[enemyIndex]->m_Shape.getPosition())) {
+			//move in  a random direction left,right,up,down for 5-7 seconds
+
+			//If its time to shoot
+			if (m_Enemies[enemyIndex]->m_ShootFrequencyClock.getElapsedTime().asSeconds() > m_Enemies[enemyIndex]->m_ShootFrequency)
+			{
+				m_Enemies[enemyIndex]->m_ShootFrequencyClock.restart();
+				Bullet* bulletPtr = m_Enemies[enemyIndex]->ShootBullet(m_Enemies[enemyIndex]->m_Shape.getPosition(), _CharacterPosition);
+				m_Bullets.push_back(bulletPtr);
+			}
+		}
+	}
+
+	//Move bullets
+	for (int i = 0; i < m_Bullets.size(); i++) {
+		m_Bullets[i]->m_Shape.move(m_Bullets[i]->m_MoveVec.x, m_Bullets[i]->m_MoveVec.y);
+
+		//if bullet is outside of view then delete
+		if (!IsPositionInsideView(m_CurrentLevelView, m_Bullets[i]->m_Shape.getPosition())) {
+			m_Bullets.erase(m_Bullets.begin() + i);
+		}
+	}
+
+
 }

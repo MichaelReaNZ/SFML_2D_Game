@@ -38,10 +38,10 @@ private:
 
 public:
 	sf::RectangleShape m_Shape;
-	sf::Vector2i m_CharacterBoardPosition;
+	//sf::Vector2i m_CharacterBoardPosition;
 	float m_CharSpeed = 8.0f;
 
-	int m_health = 2;
+	int m_health = 4;
 	bool m_HasKey = false;
 
 	bool m_IsTransitioningLevels = false;

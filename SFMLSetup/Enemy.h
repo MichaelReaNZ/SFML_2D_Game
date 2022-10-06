@@ -1,5 +1,7 @@
 #pragma once
 #include "SFML/Graphics.hpp"
+#include "Bullet.h"
+
 
 class Enemy
 {
@@ -13,9 +15,12 @@ public:
 	float m_ShootSpeed = 6.0f;
 
 	sf::Clock m_WalkingTimeClock;
+	sf::Clock m_ShootFrequencyClock;
+	int m_ShootFrequency;
 	//Direction m_MoveDirection;
 
 	void ChangeDirectionRandomly();
+	Bullet* ShootBullet(sf::Vector2f _EnemyPosition, sf::Vector2f _CharacterPosition);
 
 	Enemy(sf::Vector2f _Position);
 	~Enemy();

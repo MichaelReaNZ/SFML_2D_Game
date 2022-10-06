@@ -108,41 +108,58 @@ void Character::Move(float _dt, std::vector<sf::FloatRect*> Collisions)
 	}
 }
 
-void Character::MoveToTile(sf::Vector2i _BoardOffset, Board* _Gameboard)
-{
-	sf::Vector2i boardPositionToMoveTo = m_CharacterBoardPosition + _BoardOffset;
-
-	std::cout << "Character attempting to move to Board Position: " << "x:" << boardPositionToMoveTo.x << ", " << "y:" << boardPositionToMoveTo.y << std::endl;
-
-	if (_Gameboard->CanMoveToTile(boardPositionToMoveTo)) {
-		m_CharacterBoardPosition = boardPositionToMoveTo;
-
-		//calculate screen offset
-		sf::Vector2f offSet;
-		offSet.x = _BoardOffset.x * moveAmount;
-		offSet.y = _BoardOffset.y * moveAmount;
-
-		m_Shape.move(offSet);
-
-		std::cout << "Character move success" << std::endl;
-	}
-	else {
-		//TODO:Sound effect of can't move played
-		std::cout << "Character move failed" << std::endl;
-	}
-
-	std::cout << "Character Board Position: x:" << m_CharacterBoardPosition.x << ", " << "y:" << m_CharacterBoardPosition.y << std::endl;
-}
+//void Character::MoveToTile(sf::Vector2i _BoardOffset, Board* _Gameboard)
+//{
+//	sf::Vector2i boardPositionToMoveTo = m_CharacterBoardPosition + _BoardOffset;
+//
+//	std::cout << "Character attempting to move to Board Position: " << "x:" << boardPositionToMoveTo.x << ", " << "y:" << boardPositionToMoveTo.y << std::endl;
+//
+//	if (_Gameboard->CanMoveToTile(boardPositionToMoveTo)) {
+//		m_CharacterBoardPosition = boardPositionToMoveTo;
+//
+//		//calculate screen offset
+//		sf::Vector2f offSet;
+//		offSet.x = _BoardOffset.x * moveAmount;
+//		offSet.y = _BoardOffset.y * moveAmount;
+//
+//		m_Shape.move(offSet);
+//
+//		std::cout << "Character move success" << std::endl;
+//	}
+//	else {
+//		//TODO:Sound effect of can't move played
+//		std::cout << "Character move failed" << std::endl;
+//	}
+//
+//	//std::cout << "Character Board Position: x:" << m_CharacterBoardPosition.x << ", " << "y:" << m_CharacterBoardPosition.y << std::endl;
+//}
 
 void Character::ReceiveDamageCollisions(Board* _Gameboard) {
 
 	//Enemy damage collisions
 	if (!m_IsInvincible) {
+		//hitting actual enemies
 		for (int i = 0; i < _Gameboard->m_Enemies.size(); i++)
 		{
 			if (m_Shape.getGlobalBounds().intersects(_Gameboard->m_Enemies[i]->m_Shape.getGlobalBounds()))
 			{
 				std::cout << "Colliding with enemy." << std::endl;
+				m_health -= 1;
+				std::cout << "Reduced health to: " << m_health << std::endl;
+				m_invincibleTimeClock.restart();
+				m_IsInvincible = true;
+				std::cout << "Invincible for 2 seconds." << std::endl;
+				m_Shape.setFillColor(sf::Color::Red);
+				m_CharacterSprite.setColor(sf::Color::Red);
+			}
+		}
+
+		//bullet damage
+		for (int i = 0; i < _Gameboard->m_Bullets.size(); i++)
+		{
+			if (m_Shape.getGlobalBounds().intersects(_Gameboard->m_Bullets[i]->m_Shape.getGlobalBounds()))
+			{
+				std::cout << "Colliding with bullet." << std::endl;
 				m_health -= 1;
 				std::cout << "Reduced health to: " << m_health << std::endl;
 				m_invincibleTimeClock.restart();
