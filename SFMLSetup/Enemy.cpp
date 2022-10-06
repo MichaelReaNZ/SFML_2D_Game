@@ -14,8 +14,8 @@ Enemy::Enemy(sf::Vector2f _Position)
 	m_WalkingTimeClock.restart();
 	ChangeDirectionRandomly();
 
-	//random number between 2 and 5
-	m_ShootFrequency = rand() % 3 + 2;
+	//random number between 1 and 3
+	m_ShootFrequency = rand() % 3 + 1;
 }
 
 Enemy::~Enemy()

@@ -41,7 +41,7 @@ public:
 	//sf::Vector2i m_CharacterBoardPosition;
 	float m_CharSpeed = 8.0f;
 
-	int m_health = 4;
+	int m_health = 3;
 	bool m_HasKey = false;
 
 	bool m_IsTransitioningLevels = false;

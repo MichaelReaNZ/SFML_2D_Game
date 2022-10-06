@@ -5,7 +5,7 @@ Bullet::Bullet(sf::Vector2f _Position, sf::Vector2i _MoveVect)
 {
 	m_Position = _Position;
 	m_MoveVec = _MoveVect;
-	m_speed = 2;
+	m_speed = 5;
 
 	m_Shape = sf::CircleShape(10);
 	m_Shape.setFillColor(sf::Color::Red);
