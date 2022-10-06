@@ -244,6 +244,8 @@ void Character::Attack(Board* _Gameboard) {
 		//move the weapon bounding box back to the character if not attacking
 		m_WeaponBoundingBox.setPosition(sf::Vector2f(m_Shape.getPosition().x, m_Shape.getPosition().y));
 	}
+
+
 }
 
 //is character inside of levelView

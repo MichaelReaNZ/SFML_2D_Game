@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "Board.h"
 
 Enemy::Enemy(sf::Vector2f _Position)
 {
@@ -9,6 +10,9 @@ Enemy::Enemy(sf::Vector2f _Position)
 	m_texture = new sf::Texture();
 	m_texture->loadFromFile("Assets/Enemy01.png");
 	m_Shape.setTexture(m_texture);
+
+	m_WalkingTimeClock.restart();
+	ChangeDirectionRandomly();
 }
 
 Enemy::~Enemy()
@@ -20,3 +24,27 @@ void Enemy::Update(sf::RenderWindow& _Window)
 {
 	_Window.draw(m_Shape);
 }
+
+void Enemy::ChangeDirectionRandomly() {
+	m_MoveVec.x = 0;
+	m_MoveVec.y = 0;
+	int randomDirection = rand() % 4 + 1;
+	if (randomDirection == 1) {
+		//	m_Enemies[i]->m_MoveDirection = Left;
+		m_MoveVec.x += -m_MoveSpeed;
+	}
+	else if (randomDirection == 2) {
+		///[i]->m_MoveDirection = Right;
+		m_MoveVec.x += m_MoveSpeed;
+	}
+	else if (randomDirection == 3) {
+		//[i]->m_MoveDirection = Up;
+		m_MoveVec.y += -m_MoveSpeed;
+	}
+	else if (randomDirection == 4) {
+		//m_Enemies[i]->m_MoveDirection = Down;
+		m_MoveVec.y += m_MoveSpeed;
+	}
+}
+
+

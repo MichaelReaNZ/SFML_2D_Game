@@ -1,6 +1,6 @@
 #pragma once
 #include "Board.h"
-#include "Collisions.h"
+
 
 Board::Board()
 {
@@ -87,13 +87,18 @@ void Board::Update(sf::RenderWindow& _Window, sf::View* _LevelView)
 			m_Items[i]->Update(_Window);
 		}
 	}
-
+	int enemiesRemaining = m_Enemies.size();
 	//draw enemies
 	for (int i = 0; i < m_Enemies.size(); i++) {
 		if (IsPositionInsideView(_LevelView, m_Enemies[i]->m_Shape.getPosition())) {
 			m_Enemies[i]->Update(_Window);
 		}
 	}
+	if (enemiesRemaining == 0) {
+		m_IsGameComplete = true;
+	}
+
+
 }
 
 //convert board position to screen position
@@ -241,4 +246,53 @@ int Board::GetEnemiesRemainingInLevel()
 	}
 
 	return _EnemiesRemainingInLevel;
+}
+
+void Board::EnemyMovement() {
+	//for each enemy
+	for (int enemyIndex = 0; enemyIndex < m_Enemies.size(); enemyIndex++) {
+		//if enemy is inside the view
+		if (IsPositionInsideView(m_CurrentLevelView, m_Enemies[enemyIndex]->m_Shape.getPosition())) {
+			//move in  a random direction left,right,up,down for 5-7 seconds
+			if (m_Enemies[enemyIndex]->m_WalkingTimeClock.getElapsedTime().asSeconds() > 7) {
+				m_Enemies[enemyIndex]->m_WalkingTimeClock.restart();
+
+				m_Enemies[enemyIndex]->ChangeDirectionRandomly();
+			}
+			else {
+				//move enemy in the direction
+				//move x and y seperate to avoid glitchyness of being moved up when you have colided horizontally
+				m_Enemies[enemyIndex]->m_Shape.move(m_Enemies[enemyIndex]->m_MoveVec.x, 0.00f);
+				//std::cout << "Enemy Movement x" << m_Enemies[i]->m_MoveVec.x << std::endl;
+
+				for (int i = 0; i < m_WorldCollisionRects.size(); i++) {
+					{
+						//sf::FloatRect shapeBounds = m_Enemies[i]->m_Shape.getGlobalBounds();
+						if (m_Enemies[enemyIndex]->m_Shape.getGlobalBounds().intersects(*m_WorldCollisionRects[i]))
+						{
+							Collisions::ResolveXCollisions(&m_Enemies[enemyIndex]->m_Shape, m_WorldCollisionRects[i]);
+							m_Enemies[enemyIndex]->ChangeDirectionRandomly();
+						}
+					}
+				}
+
+				m_Enemies[enemyIndex]->m_Shape.move(0.00f, m_Enemies[enemyIndex]->m_MoveVec.y);
+				//	std::cout << "Movement y" << m_Enemies[i]->m_MoveVec.y << std::endl;
+
+				for (int i = 0; i < m_WorldCollisionRects.size(); i++) {
+					{
+						//sf::FloatRect shapeBounds = m_Enemies[i]->m_Shape.getGlobalBounds();
+						if (m_Enemies[enemyIndex]->m_Shape.getGlobalBounds().intersects(*m_WorldCollisionRects[i]))
+						{
+							Collisions::ResolveYCollisions(&m_Enemies[enemyIndex]->m_Shape, m_WorldCollisionRects[i]);
+							m_Enemies[enemyIndex]->ChangeDirectionRandomly();
+						}
+					}
+				}
+
+			}
+		}
+
+
+	}
 }

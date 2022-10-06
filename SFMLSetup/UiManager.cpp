@@ -10,7 +10,7 @@ UiManager::~UiManager()
 {
 }
 
-void UiManager::Update(sf::RenderWindow& _Window, int _CharacterHealth, bool _HasKey, int _Score, int _HighScore, sf::Clock _RunningTime)
+void UiManager::Update(sf::RenderWindow& _Window, int _CharacterHealth, bool _HasKey, int _Score, int _HighScore, sf::Clock _RunningTime, bool _IsGameComplete)
 {
 	sf::View view = _Window.getView();
 
@@ -44,6 +44,25 @@ void UiManager::Update(sf::RenderWindow& _Window, int _CharacterHealth, bool _Ha
 		_Window.draw(deathScreen);
 		return;
 	}
+
+	//TODO: Win screen
+	if (_IsGameComplete && _CharacterHealth > 0) {
+		m_IsGameOver = true;
+		//draw white screen
+		sf::RectangleShape winScreen;
+		winScreen.setSize(sf::Vector2f(_Window.getSize().x, _Window.getSize().y));
+		winScreen.setPosition(hudAreaBox.getPosition());
+		//	deathScreen.setFillColor(sf::Color::White);
+
+		sf::Texture texture = sf::Texture();
+		texture.loadFromFile("Assets/WinScreen.png");
+		winScreen.setTexture(&texture);
+
+		//press enter to try again
+		_Window.draw(winScreen);
+		return;
+	}
+
 
 	_Window.draw(hudAreaBox);
 

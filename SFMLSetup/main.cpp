@@ -53,7 +53,7 @@ int main()
 
 
 			if (event.type == sf::Event::KeyPressed) {
-				if (uiManager.m_IsGameOver) {
+				if (uiManager.m_IsGameOver || mainBoard->m_IsGameComplete) {
 					if (event.key.code == sf::Keyboard::Enter) {
 						//set back to level 1 start
 						delete mainCharacter;
@@ -61,6 +61,7 @@ int main()
 						mainBoard = new Board();
 						mainCharacter = new Character(mainBoard->BoardPositionToScreenPosition(19, 19));
 						uiManager.m_IsGameOver = false;
+						mainBoard->m_IsGameComplete = false;
 					}
 				}
 				//esc key
@@ -101,10 +102,9 @@ int main()
 			physicsSystem.UpdateDynamicObject(mainCharacter, false);
 
 			mainCharacter->CharacterInput(mainBoard);
+			mainBoard->EnemyMovement();
 
-			sf::Vector2f charPos = mainCharacter->m_Shape.getPosition();
-
-			//is character inside of levelView TODO:Put this change view on board.
+			//sf::Vector2f charPos = mainCharacter->m_Shape.getPosition();
 
 			mainBoard->TransitionLevel(mainCharacter->m_Shape.getPosition());
 			mainCharacter->m_IsTransitioningLevels = false;
@@ -116,7 +116,7 @@ int main()
 			mainCharacter->Update(window);
 
 			window.setView(gameView);
-			uiManager.Update(window, mainCharacter->m_health, mainCharacter->m_HasKey, mainBoard->m_Score, mainBoard->m_HighScore, mainBoard->m_TimeSinceGameStart);
+			uiManager.Update(window, mainCharacter->m_health, mainCharacter->m_HasKey, mainBoard->m_Score, mainBoard->m_HighScore, mainBoard->m_TimeSinceGameStart, mainBoard->m_IsGameComplete);
 			if (debugWindowIsVisible) {
 
 				//only update when changing values

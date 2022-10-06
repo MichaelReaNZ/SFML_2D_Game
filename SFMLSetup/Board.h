@@ -4,6 +4,8 @@
 #include <iostream>
 #include "Enemy.h"
 #include "Item.h"
+#include "Collisions.h"
+#include "Enums.h"
 
 class Board {
 	static const int BOARD_WIDTH = 16 * 2;
@@ -43,7 +45,7 @@ public:
 	float m_EnemyShootSpeed = 6.0f;
 
 	sf::View* m_CurrentLevelView;
-	bool m_IsLevelComplete = false;
+	bool m_IsGameComplete = false;
 	sf::Clock m_TimeSinceGameStart;
 	int m_Score;
 	int m_HighScore;
@@ -52,4 +54,6 @@ public:
 	void TransitionLevel(sf::Vector2f _CharacterPosition);
 	int GetEnemiesRemainingInLevel();
 	void IncrementScore();
+
+	void EnemyMovement();
 };
