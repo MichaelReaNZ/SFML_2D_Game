@@ -18,7 +18,4 @@ Tile::~Tile()
 void Tile::Update(sf::RenderWindow& _Window)
 {
 	_Window.draw(m_TileSprite);
-
-	//This introduces performance issues
-	//_Window.draw(m_TileShape);
 }

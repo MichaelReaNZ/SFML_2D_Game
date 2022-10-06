@@ -14,10 +14,7 @@ class Tile
 	//ref for the character currently on the tile
 
 private:
-	//sf::RectangleShape m_TileShape; // the 2d image of the tile
 	sf::Texture* m_Texture; // the texture of the tile
-
-
 
 public:
 	sf::Sprite m_TileSprite; //TODO: Should I use a pointer?

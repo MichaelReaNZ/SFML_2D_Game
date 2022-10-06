@@ -17,7 +17,6 @@ public:
 	sf::Clock m_WalkingTimeClock;
 	sf::Clock m_ShootFrequencyClock;
 	int m_ShootFrequency;
-	//Direction m_MoveDirection;
 
 	void ChangeDirectionRandomly();
 	Bullet* ShootBullet(sf::Vector2f _EnemyPosition, sf::Vector2f _CharacterPosition);
@@ -25,6 +24,5 @@ public:
 	Enemy(sf::Vector2f _Position);
 	~Enemy();
 	void Update(sf::RenderWindow& _Window);
-
 };
 

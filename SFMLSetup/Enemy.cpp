@@ -33,19 +33,15 @@ void Enemy::ChangeDirectionRandomly() {
 	m_MoveVec.y = 0;
 	int randomDirection = rand() % 4 + 1;
 	if (randomDirection == 1) {
-		//	m_Enemies[i]->m_MoveDirection = Left;
 		m_MoveVec.x += -m_MoveSpeed;
 	}
 	else if (randomDirection == 2) {
-		///[i]->m_MoveDirection = Right;
 		m_MoveVec.x += m_MoveSpeed;
 	}
 	else if (randomDirection == 3) {
-		//[i]->m_MoveDirection = Up;
 		m_MoveVec.y += -m_MoveSpeed;
 	}
 	else if (randomDirection == 4) {
-		//m_Enemies[i]->m_MoveDirection = Down;
 		m_MoveVec.y += m_MoveSpeed;
 	}
 }

@@ -38,34 +38,21 @@ private:
 
 public:
 	sf::RectangleShape m_Shape;
-	//sf::Vector2i m_CharacterBoardPosition;
 	float m_CharSpeed = 8.0f;
 
 	int m_health = 3;
 	bool m_HasKey = false;
 
 	bool m_IsTransitioningLevels = false;
-	//float playerVelocityY = 0.0f;
-
-	//sf::RectangleShape* CharGetShape() { return m_Shape; }
 
 	Character(sf::Vector2f _ScreenPosition);
 	~Character();
 
-	//void Update(sf::RenderWindow& _Window);
 	void Update(sf::RenderWindow& _Window);
 
 	void CharacterInput(Board* gameboard);
-	//void NewMove(sf::Vector2i _BoardOffset);
 	void MoveToTile(sf::Vector2i _boardOffset, Board* gameboard);
 	void Move(float _dt, std::vector<sf::FloatRect*> Collisions);
-
-	//void CharacterJump() { m_Shape.move(0, -0.2f); playerVelocityY = -5.0f; }
-
-	//void modCharSpeed(float _valMod) { m_CharSpeed = _valMod * m_CharBaseSpeed; }
-
 	bool IsCharacterInsideLevelView(sf::View* _LevelView);
-
-	//Bullet Shoot();
 };
 

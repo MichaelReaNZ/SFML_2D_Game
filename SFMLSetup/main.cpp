@@ -13,7 +13,7 @@ int main()
 
 	//2 tile space for UI
 	sf::RenderWindow window(sf::VideoMode(1024, 1024 + 64 * 2), "Tile Based Project");
-	const int frameLimit = 60;
+	const int frameLimit = 30;
 	window.setFramerateLimit(frameLimit);
 
 	//debug window

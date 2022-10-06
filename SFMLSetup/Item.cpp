@@ -8,7 +8,6 @@ Item::Item(sf::Vector2f _Position, ItemType _ItemType)
 	m_Shape.setSize(sf::Vector2f(64, 64));
 	m_Shape.setOrigin(m_Shape.getSize().x / 2, m_Shape.getSize().y / 2);
 	m_Shape.setPosition(_Position);
-	//m_Shape.setFillColor(sf::Color::Green);
 
 	switch (m_ItemType)
 	{

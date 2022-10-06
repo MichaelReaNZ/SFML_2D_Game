@@ -3,14 +3,9 @@
 #include "Enums.h"
 
 class Bullet
-{	//direction
-
+{
 	int m_speed;
-
 	sf::Vector2f  m_Position;
-	//sf::Texture* m_Texture;
-
-
 
 public:
 	sf::CircleShape m_Shape;
@@ -19,6 +14,5 @@ public:
 	Bullet(sf::Vector2f _Position, sf::Vector2i _MoveVect);
 
 	void Update(sf::RenderWindow& _Window);
-
 };
 

@@ -11,8 +11,6 @@ public:
 
 	bool m_IsGameOver = false;
 
-	//bool m_IsNewGame = true;
-
 	void Update(sf::RenderWindow& _Window, int _CharacterHealth, bool _HasKey, int _Score, int _HighScore, sf::Clock _RunningTime, bool _IsGameComplete);
 	void UpdateDebugWindow(sf::RenderWindow& _DebugWindow, Character* _Character, Board* _Board);
 };

@@ -1,7 +1,7 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 
-static class Collisions
+class Collisions
 {
 public:
 	static void ResolveXCollisions(sf::Shape* _objA, sf::FloatRect* _objB) {
@@ -55,11 +55,6 @@ public:
 			}
 		}
 	}
-
-	//static bool IsColliding(sf::Shape* _pObjA, sf::Shape* _pObjB) {
-	//	return _pObjA->getGlobalBounds().intersects(_pObjB->getGlobalBounds());
-	//}
-
 };
 
 //is position inside of levelView

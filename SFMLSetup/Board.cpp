@@ -1,7 +1,5 @@
 #pragma once
 #include "Board.h"
-
-
 Board::Board()
 {
 	PreLoadTextureAssetsFromFiles();
@@ -26,6 +24,14 @@ Board::Board()
 	highScoreFile.close();
 
 	m_TimeSinceGameStart.restart();
+
+	sf::Music music;
+	if (!music.openFromFile("Assets/Music.wav")) {
+
+	}
+	else {
+		music.play();
+	}
 }
 
 Board::~Board()
@@ -97,18 +103,12 @@ void Board::Update(sf::RenderWindow& _Window, sf::View* _LevelView)
 
 	//Draw bullets
 	for (int i = 0; i < m_Bullets.size(); i++) {
-		//if (IsPositionInsideView(_LevelView, m_Bullets[i]->m_Shape.getPosition())) {
 		m_Bullets[i]->Update(_Window);
-		//}
 	}
-
-
 
 	if (enemiesRemaining == 0) {
 		m_IsGameComplete = true;
 	}
-
-
 }
 
 //convert board position to screen position
@@ -242,7 +242,6 @@ void Board::IncrementScore()
 		file << m_HighScore;
 		file.close();
 	}
-
 }
 
 int Board::GetEnemiesRemainingInLevel()
@@ -273,11 +272,9 @@ void Board::EnemyMovement() {
 				//move enemy in the direction
 				//move x and y seperate to avoid glitchyness of being moved up when you have colided horizontally
 				m_Enemies[enemyIndex]->m_Shape.move(m_Enemies[enemyIndex]->m_MoveVec.x, 0.00f);
-				//std::cout << "Enemy Movement x" << m_Enemies[i]->m_MoveVec.x << std::endl;
 
 				for (int i = 0; i < m_WorldCollisionRects.size(); i++) {
 					{
-						//sf::FloatRect shapeBounds = m_Enemies[i]->m_Shape.getGlobalBounds();
 						if (m_Enemies[enemyIndex]->m_Shape.getGlobalBounds().intersects(*m_WorldCollisionRects[i]))
 						{
 							Collisions::ResolveXCollisions(&m_Enemies[enemyIndex]->m_Shape, m_WorldCollisionRects[i]);
@@ -287,8 +284,6 @@ void Board::EnemyMovement() {
 				}
 
 				m_Enemies[enemyIndex]->m_Shape.move(0.00f, m_Enemies[enemyIndex]->m_MoveVec.y);
-				//	std::cout << "Movement y" << m_Enemies[i]->m_MoveVec.y << std::endl;
-
 				for (int i = 0; i < m_WorldCollisionRects.size(); i++) {
 					{
 						//sf::FloatRect shapeBounds = m_Enemies[i]->m_Shape.getGlobalBounds();
@@ -299,11 +294,8 @@ void Board::EnemyMovement() {
 						}
 					}
 				}
-
 			}
 		}
-
-
 	}
 }
 
@@ -334,6 +326,4 @@ void Board::EnemyAttack(sf::Vector2f _CharacterPosition) {
 			m_Bullets.erase(m_Bullets.begin() + i);
 		}
 	}
-
-
 }

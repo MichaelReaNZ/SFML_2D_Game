@@ -6,6 +6,7 @@
 #include "Item.h"
 #include "Collisions.h"
 #include "Enums.h"
+#include <SFML/Audio.hpp>
 
 class Board {
 	static const int BOARD_WIDTH = 16 * 2;
@@ -24,6 +25,8 @@ class Board {
 	//tile textures
 	sf::Texture* m_tileTextureArray[3];
 	void PreLoadTextureAssetsFromFiles();
+
+	sf::Music m_music;
 public:
 	Board();
 	~Board();

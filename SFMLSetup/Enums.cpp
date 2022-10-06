@@ -22,6 +22,10 @@ std::string EnumToString(Direction _dir)
 		case Right:
 			return "Right";
 			break;
+		default:
+			return "Error";
+			break;
 		}
+
 	}
 }
